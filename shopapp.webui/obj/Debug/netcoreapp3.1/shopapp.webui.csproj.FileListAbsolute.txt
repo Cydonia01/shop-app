@@ -35,3 +35,8 @@ C:\Users\Aley\Desktop\shop-app\shopapp.webui\obj\Debug\netcoreapp3.1\Razor\Views
 C:\Users\Aley\Desktop\shop-app\shopapp.webui\obj\Debug\netcoreapp3.1\Razor\Views\Product\List.cshtml.g.cs
 C:\Users\Aley\Desktop\shop-app\shopapp.webui\obj\Debug\netcoreapp3.1\Razor\Views\Home\MyView.cshtml.g.cs
 C:\Users\Aley\Desktop\shop-app\shopapp.webui\obj\Debug\netcoreapp3.1\Razor\Views\_ViewImports.cshtml.g.cs
+C:\Users\Aley\Desktop\shop-app\shopapp.webui\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_navbar.cshtml.g.cs
+C:\Users\Aley\Desktop\shop-app\shopapp.webui\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_header.cshtml.g.cs
+C:\Users\Aley\Desktop\shop-app\shopapp.webui\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_noproduct.cshtml.g.cs
+C:\Users\Aley\Desktop\shop-app\shopapp.webui\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_product.cshtml.g.cs
+C:\Users\Aley\Desktop\shop-app\shopapp.webui\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Components\Categories\Default.cshtml.g.cs
