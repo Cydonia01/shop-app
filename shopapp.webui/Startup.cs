@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using shopapp.data.Abstract;
+using shopapp.data.Concrete.EfCore;
 
 namespace shopapp.webui
 {
@@ -19,8 +21,7 @@ namespace shopapp.webui
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            // mvc
-            // razor pages
+            services.AddScoped<IProductRepository, EfCoreProductRepository>();
             services.AddControllersWithViews();
         }
 

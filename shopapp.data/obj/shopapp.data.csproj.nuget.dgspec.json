@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Aley\\Desktop\\shop-app\\shopapp.webui\\shopapp.webui.csproj": {}
+    "C:\\Users\\Aley\\Desktop\\shop-app\\shopapp.data\\shopapp.data.csproj": {}
   },
   "projects": {
     "C:\\Users\\Aley\\Desktop\\shop-app\\shopapp.data\\shopapp.data.csproj": {
@@ -120,75 +120,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.425\\RuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "C:\\Users\\Aley\\Desktop\\shop-app\\shopapp.webui\\shopapp.webui.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\Aley\\Desktop\\shop-app\\shopapp.webui\\shopapp.webui.csproj",
-        "projectName": "shopapp.webui",
-        "projectPath": "C:\\Users\\Aley\\Desktop\\shop-app\\shopapp.webui\\shopapp.webui.csproj",
-        "packagesPath": "C:\\Users\\Aley\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Aley\\Desktop\\shop-app\\shopapp.webui\\obj\\",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "C:\\Users\\Aley\\AppData\\Roaming\\NuGet\\NuGet.Config"
-        ],
-        "originalTargetFrameworks": [
-          "netcoreapp3.1"
-        ],
-        "sources": {
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "netcoreapp3.1": {
-            "projectReferences": {
-              "C:\\Users\\Aley\\Desktop\\shop-app\\shopapp.data\\shopapp.data.csproj": {
-                "projectPath": "C:\\Users\\Aley\\Desktop\\shop-app\\shopapp.data\\shopapp.data.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        }
-      },
-      "frameworks": {
-        "netcoreapp3.1": {
-          "dependencies": {
-            "Microsoft.EntityFrameworkcore.Design": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[3.1.3, )"
-            },
-            "Microsoft.EntityFrameworkcore.Sqlite": {
-              "target": "Package",
-              "version": "[3.1.3, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.425\\RuntimeIdentifierGraph.json"
         }
       }
