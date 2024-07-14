@@ -1,71 +1,68 @@
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http.Connections;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using shopapp.webui.Models;
 
 namespace shopapp.webui.Controllers {
     public class ProductController : Controller {
         // localhost:5000/product/list
         public IActionResult Index() {
-
-            // ViewBag
-            // Model
-            // ViewData
-
-            var product = new Product() {
-                Name = "Iphone X",
-                Price = 6000,
-                Description = "Nice phone!"
-            };
-
-            // ViewData["Product"] = product;
-            // ViewData["Category"] = "Phones";
-
-            // ViewBag.Product = product;
-            ViewBag.Category = "Phones";
-
-            return View(product);
+            return View();
         }
 
-        public IActionResult List() {
-            var products = new List<Product> {
-                new Product() {
-                    Name = "Samsung S6",
-                    Price = 3000,
-                    Description = "Nice phone!",
-                    IsApproved = true
-                },
-                new Product() {
-                    Name = "Samsung S7",
-                    Price = 4000,
-                    Description = "Nice phone!",
-                    IsApproved = true
-                },
-                new Product() {
-                    Name = "Samsung S8",
-                    Price = 5000,
-                    Description = "Nice phone!"
-                }
-            };
+        public IActionResult List(int? id, string q) {
+            var products = ProductRepository.Products;
+
+            if (id != null) {
+                products = products.Where(i => i.CategoryId == id).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(q)) {
+                products = products.Where(i => i.Name.ToLower().Contains(q.ToLower()) || i.Description.Contains(q)).ToList();
+            }
 
             var productViewModel = new ProductViewModel {
-                Products = products,
+                Products = products
             };
             return View(productViewModel);
         }
 
         public IActionResult Details(int id) {
-            // ViewBag.Name = "Samsung S6";
-            // ViewBag.Price = 3000;
-            // ViewBag.Description = "Nice phone!";
-            
-            var p = new Product() {
-                Name = "Samsung S6",
-                Price = 3000,
-                Description = "Nice phone!"
-            };
-            
+            return View(ProductRepository.GetProductById(id));
+        }
+
+        [HttpGet]
+        public IActionResult Create() {
+            ViewBag.Categories = new SelectList(CategoryRepository.Categories,"CategoryId","Name");
+            return View(new Product());
+        }
+
+        [HttpPost]
+        public IActionResult Create(Product p) {
+            if (ModelState.IsValid) {
+                ProductRepository.AddProduct(p);
+                return RedirectToAction("List");
+            }
+            ViewBag.Categories = new SelectList(CategoryRepository.Categories,"CategoryId","Name");
             return View(p);
+        }
+        
+        [HttpGet]
+        public IActionResult Edit(int id) {
+            ViewBag.Categories = new SelectList(CategoryRepository.Categories,"CategoryId","Name");
+            return View(ProductRepository.GetProductById(id));
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Product p) {
+            ProductRepository.EditProduct(p);
+            return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int productId) {
+            ProductRepository.DeleteProduct(productId);
+            return RedirectToAction("List");
         }
     }
 }
