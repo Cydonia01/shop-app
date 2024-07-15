@@ -1,17 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
-using shopapp.data.Abstract;
+using shopapp.business.Abstract;
 
 namespace shopapp.webui.Controllers {
     public class HomeController: Controller {
-        private readonly IProductRepository _productRepository;
+        private IProductService _productService;
 
-        public HomeController(IProductRepository productRepository) {
-            _productRepository = productRepository;
+        public HomeController(IProductService productService) {
+            _productService = productService;
         }
         public IActionResult Index() {
             
-            var productViewModel = new ProductViewModel {
-                Products = ProductRepository.Products
+            var productViewModel = new ProductListViewModel {
+                Products = _productService.GetAll()
             };
             return View(productViewModel);
         }
@@ -19,5 +19,6 @@ namespace shopapp.webui.Controllers {
         public IActionResult About() {
             return View();
         }
+        
     }
 }

@@ -2,6 +2,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\shopapp.data\shopapp.data.csproj" />
+    <ProjectReference Include="..\shopapp.entity\shopapp.entity.csproj" />
+    <ProjectReference Include="..\shopapp.business\shopapp.business.csproj" />
   </ItemGroup>
 
   
@@ -11,6 +13,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkcore.Sqlite" Version="3.1.3" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="3.1.3" />
   </ItemGroup>
 
 

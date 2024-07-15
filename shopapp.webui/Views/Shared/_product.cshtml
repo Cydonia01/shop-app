@@ -4,12 +4,14 @@
     <img class="card-img-top" src="~/img/@Model.ImageUrl"></img>
     <div class="card-body">
         <h5 class="card-title">@Model.Name</h5>
-        <p class="card-text">@Model.Description</p>
-        <a asp-controller="Product" asp-action="Details" asp-route-id="@Model.ProductId" class="btn btn-primary btn-sm">Inspect</a>
-        <a asp-controller="Product" asp-action="Edit" asp-route-id="@Model.ProductId" class="btn btn-primary btn-sm">Edit</a>
-        <form action="/product/delete" method="POST" style="display: inline;">
-            <input type="hidden" name="ProductId" value="@Model.ProductId">
-            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-        </form>
+        <small class="text-muted">
+            <i class="fas fa-dollar-sign">
+                @Model.Price
+            </i>
+        </small>
+    </div>
+    <div class="card-footer text-center">
+        <a asp-controller="shop" asp-action="Details" asp-route-id="@Model.ProductId" class="btn btn-primary btn-sm">Details</a>
+        <a asp-controller="shop" asp-action="addtocart" asp-route-id="@Model.ProductId" class="btn btn-primary btn-sm">Add To Cart</a>
     </div>
 </div>

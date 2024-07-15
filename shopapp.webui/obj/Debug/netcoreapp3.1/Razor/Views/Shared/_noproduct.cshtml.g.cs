@@ -14,13 +14,20 @@ namespace AspNetCore
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
 #nullable restore
 #line 2 "C:\Users\Aley\Desktop\shop-app\shopapp.webui\Views\_ViewImports.cshtml"
+using shopapp.entity;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 3 "C:\Users\Aley\Desktop\shop-app\shopapp.webui\Views\_ViewImports.cshtml"
 using shopapp.webui.Models;
 
 #line default
 #line hidden
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"dc4113478e7ed1abb86284e3bc0c1ff1c2922743", @"/Views/Shared/_noproduct.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"415ce9953bd46be8f2c4fe4cc22e26d003bfb282", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"b78cf378126ac948c116e7da7f8c5a9f9f4bb8ee", @"/Views/_ViewImports.cshtml")]
     public class Views_Shared__noproduct : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         #pragma warning disable 1998

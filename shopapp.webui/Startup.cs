@@ -1,17 +1,14 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using shopapp.data.Abstract;
 using shopapp.data.Concrete.EfCore;
+using shopapp.business.Abstract;
+using shopapp.business.Concrete;
+using shopapp.data.Concrete;
 
 namespace shopapp.webui
 {
@@ -21,7 +18,12 @@ namespace shopapp.webui
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IProductRepository, EfCoreProductRepository>();
+            services.AddScoped<ICategoryService, CategoryManager>();
+            services.AddScoped<IProductService, ProductManager>();
+            services.
+            
+            AddScoped<IProductRepository, EfCoreProductRepository>();
+            services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>();
             services.AddControllersWithViews();
         }
 
@@ -38,6 +40,7 @@ namespace shopapp.webui
             );
             if (env.IsDevelopment())
             {
+                SeedDatabase.Seed();
                 app.UseDeveloperExceptionPage();
             }
 
@@ -48,6 +51,12 @@ namespace shopapp.webui
             // localhost:5000/products/list/3
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "products",
+                    pattern: "products/{category?}",
+                    defaults: new {controller="Shop", action="List"}
+                );
+                
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}"

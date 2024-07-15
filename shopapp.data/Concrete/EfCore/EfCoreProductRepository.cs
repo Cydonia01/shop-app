@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using shopapp.data.Abstract;
 using shopapp.entity;
 
@@ -15,5 +14,31 @@ namespace shopapp.data.Concrete.EfCore
                 return context.Products.ToList();
             }
         }
+
+        public Product GetProductDetails(int id)
+        {
+            using(var context = new ShopContext()) {
+                return context.Products
+                    .Where(i => i.ProductId == id)
+                    .Include(i=>i.ProductCategories)
+                    .ThenInclude(i=>i.Category)
+                    .FirstOrDefault();
+            }
+        }
+
+        public List<Product> GetProductsByCategory(string name)
+        {
+            using(var context = new ShopContext()) {
+                var products = context.Products.AsQueryable();
+                if (!string.IsNullOrEmpty(name)) {
+                    products = products
+                        .Include(i=>i.ProductCategories)
+                        .ThenInclude(i=>i.Category)
+                        .Where(i=>i.ProductCategories.Any(a=>a.Category.Url == name));
+                }
+                return products.ToList();
+            }
+        }
+        
     }
 }
