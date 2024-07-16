@@ -34,6 +34,10 @@ namespace shopapp.business.Concrete
             return _productRepository.GetProductsByCategory(name, pageSize, page);
         }
 
+        public List<Product> GetSearchResult(string searchString)
+        {
+            return _productRepository.GetSearchResult(searchString);
+        }
         public void Create(Product entity)
         {
             _productRepository.Create(entity);
@@ -52,6 +56,11 @@ namespace shopapp.business.Concrete
         public int GetCountByCategory(string category)
         {
             return _productRepository.GetCountByCategory(category);
+        }
+
+        public List<Product> GetHomePageProducts()
+        {
+            return _productRepository.GetHomePageProducts();
         }
     }
 }

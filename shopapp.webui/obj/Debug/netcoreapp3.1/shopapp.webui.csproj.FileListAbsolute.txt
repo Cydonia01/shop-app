@@ -91,3 +91,5 @@ C:\Users\Aley\Desktop\shop-app\shopapp.webui\bin\Debug\netcoreapp3.1\shopapp.bus
 C:\Users\Aley\Desktop\shop-app\shopapp.webui\bin\Debug\netcoreapp3.1\shopapp.business.pdb
 C:\Users\Aley\Desktop\shop-app\shopapp.webui\obj\Debug\netcoreapp3.1\Razor\Views\Shop\List.cshtml.g.cs
 C:\Users\Aley\Desktop\shop-app\shopapp.webui\obj\Debug\netcoreapp3.1\Razor\Views\Shop\Details.cshtml.g.cs
+C:\Users\Aley\Desktop\shop-app\shopapp.webui\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_search.cshtml.g.cs
+C:\Users\Aley\Desktop\shop-app\shopapp.webui\obj\Debug\netcoreapp3.1\Razor\Views\Shop\Search.cshtml.g.cs

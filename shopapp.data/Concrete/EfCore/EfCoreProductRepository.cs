@@ -30,7 +30,9 @@ namespace shopapp.data.Concrete.EfCore
         public List<Product> GetProductsByCategory(string name, int pageSize, int page)
         {
             using(var context = new ShopContext()) {
-                var products = context.Products.AsQueryable();
+                var products = context.Products
+                .Where(i=>i.IsApproved)
+                .AsQueryable();
                 if (!string.IsNullOrEmpty(name)) {
                     products = products
                         .Include(i=>i.ProductCategories)
@@ -47,7 +49,9 @@ namespace shopapp.data.Concrete.EfCore
         public int GetCountByCategory(string category)
         {
             using(var context = new ShopContext()) {
-                var products = context.Products.AsQueryable();
+                var products = context.Products
+                .Where(i=>i.IsApproved)
+                .AsQueryable();
                 if (!string.IsNullOrEmpty(category)) {
                     products = products
                         .Include(i=>i.ProductCategories)
@@ -57,6 +61,24 @@ namespace shopapp.data.Concrete.EfCore
                 return products.Count();
             }
         }
-        
+
+        public List<Product> GetHomePageProducts()
+        {
+            using(var context = new ShopContext()) {
+                return context.Products
+                    .Where(i=>i.IsApproved && i.IsHome)
+                    .ToList();
+            }
+        }
+
+        public List<Product> GetSearchResult(string searchString)
+        {
+            using(var context = new ShopContext()) {
+                var products = context.Products
+                    .Where(i=>i.IsApproved && (i.Name.ToLower().Contains(searchString.ToLower()) || i.Description.ToLower().Contains(searchString.ToLower())))
+                    .AsQueryable();
+                return products.ToList();
+            }
+        }
     }
 }

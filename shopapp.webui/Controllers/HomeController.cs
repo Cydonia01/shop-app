@@ -12,7 +12,7 @@ namespace shopapp.webui.Controllers {
         public IActionResult Index() {
             
             var productViewModel = new ProductListViewModel {
-                Products = _productService.GetAll()
+                Products = _productService.GetHomePageProducts()
             };
             return View(productViewModel);
         }
