@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using shopapp.business.Abstract;
 using shopapp.entity;
 using shopapp.webui.Models;
-using shopapp.webui.ViewModels;
 
 namespace shopapp.webui.Controllers
 {

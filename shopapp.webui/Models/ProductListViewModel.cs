@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using shopapp.entity;
 
-namespace shopapp.webui.ViewModels {
+namespace shopapp.webui.Models {
 
     public class PageInfo {
         public int TotalItems { get; set; }

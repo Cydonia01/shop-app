@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using shopapp.business.Abstract;
-using shopapp.webui.ViewModels;
+using shopapp.webui.Models;
 
 namespace shopapp.webui.Controllers {
     public class HomeController: Controller {
