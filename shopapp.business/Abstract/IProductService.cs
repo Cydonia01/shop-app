@@ -7,11 +7,12 @@ namespace shopapp.business.Abstract
     {
         Product GetById(int id);
         List<Product> GetAll();
-        Product GetProductDetails(int id);
-        List<Product> GetProductsByCategory(string name);
+        Product GetProductDetails(string url);
+        List<Product> GetProductsByCategory(string name, int pageSize, int page);
 
         void Create(Product entity);
         void Update(Product entity);
         void Delete(Product entity);
+        int GetCountByCategory(string category);
     }
 }

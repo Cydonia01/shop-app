@@ -24,14 +24,14 @@ namespace shopapp.business.Concrete
             return _productRepository.GetById(id);
         }
 
-        public Product GetProductDetails(int id)
+        public Product GetProductDetails(string url)
         {
-            return _productRepository.GetProductDetails(id);
+            return _productRepository.GetProductDetails(url);
         }
         
-        public List<Product> GetProductsByCategory(string name)
+        public List<Product> GetProductsByCategory(string name, int pageSize, int page)
         {
-            return _productRepository.GetProductsByCategory(name);
+            return _productRepository.GetProductsByCategory(name, pageSize, page);
         }
 
         public void Create(Product entity)
@@ -47,6 +47,11 @@ namespace shopapp.business.Concrete
         public void Update(Product entity)
         {
             _productRepository.Update(entity);
+        }
+
+        public int GetCountByCategory(string category)
+        {
+            return _productRepository.GetCountByCategory(category);
         }
     }
 }

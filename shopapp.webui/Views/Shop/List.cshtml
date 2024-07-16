@@ -13,6 +13,38 @@
                 </div>
             }
         </div>
+
+        <div class="row">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    @for (int i = 1; i <= Model.PageInfo.TotalPages(); i++)
+                    {
+                        @if(String.IsNullOrEmpty(Model.PageInfo.CurrentCategory)) {
+                            <li class="page-item @(Model.PageInfo.CurrentPage == i ? "active":"")">
+                                <a class="page-link" href="/products?page=@i">@i
+                                </a>
+                            </li>
+                        } else {
+                            <li class="page-item">
+                                <a class="page-link" href="/products/@Model.PageInfo.CurrentCategory?page=@i">@i
+                                </a>
+                            </li>
+                        }
+                    }
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
     </div>
 </div>
 

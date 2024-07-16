@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using shopapp.business.Abstract;
 using shopapp.entity;
 using shopapp.webui.Models;
+using shopapp.webui.ViewModels;
 
 namespace shopapp.webui.Controllers
 {
@@ -14,19 +15,26 @@ namespace shopapp.webui.Controllers
             _productService = productService;
         }
 
-        public IActionResult List(string category) {
-            
+        public IActionResult List(string category, int page = 1) {
+            const int pageSize = 3;
             var productViewModel = new ProductListViewModel {
-                Products = _productService.GetProductsByCategory(category)
+                PageInfo = new PageInfo() {
+                    TotalItems = _productService.GetCountByCategory(category),
+                    CurrentPage = page,
+                    ItemsPerPage = pageSize,
+                    CurrentCategory = category
+                },
+                Products = _productService.GetProductsByCategory(category,pageSize, page)
             };
             return View(productViewModel);
         }
 
-        public IActionResult Details(int? id) {
-            if (id == null) {
+        public IActionResult Details(string url) {
+            if (url == null) {
                 return NotFound();
             }
-            Product product = _productService.GetProductDetails((int)id);
+            Product product = _productService.GetProductDetails(url);
+
             if (product == null) {
                 return NotFound();
             }

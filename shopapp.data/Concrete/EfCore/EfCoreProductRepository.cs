@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -15,18 +16,18 @@ namespace shopapp.data.Concrete.EfCore
             }
         }
 
-        public Product GetProductDetails(int id)
+        public Product GetProductDetails(string url)
         {
             using(var context = new ShopContext()) {
                 return context.Products
-                    .Where(i => i.ProductId == id)
+                    .Where(i => i.Url == url)
                     .Include(i=>i.ProductCategories)
                     .ThenInclude(i=>i.Category)
                     .FirstOrDefault();
             }
         }
 
-        public List<Product> GetProductsByCategory(string name)
+        public List<Product> GetProductsByCategory(string name, int pageSize, int page)
         {
             using(var context = new ShopContext()) {
                 var products = context.Products.AsQueryable();
@@ -36,7 +37,24 @@ namespace shopapp.data.Concrete.EfCore
                         .ThenInclude(i=>i.Category)
                         .Where(i=>i.ProductCategories.Any(a=>a.Category.Url == name));
                 }
-                return products.ToList();
+                return products
+                .Skip((page-1)*pageSize)
+                .Take(pageSize)
+                .ToList();
+            }
+        }
+
+        public int GetCountByCategory(string category)
+        {
+            using(var context = new ShopContext()) {
+                var products = context.Products.AsQueryable();
+                if (!string.IsNullOrEmpty(category)) {
+                    products = products
+                        .Include(i=>i.ProductCategories)
+                        .ThenInclude(i=>i.Category)
+                        .Where(i=>i.ProductCategories.Any(a=>a.Category.Url == category));
+                }
+                return products.Count();
             }
         }
         

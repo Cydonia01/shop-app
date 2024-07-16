@@ -8,11 +8,11 @@ namespace shopapp.data.Concrete
     public class SeedDatabase
     {
         public static Product[] Products = {
-            new Product() { Name = "Samsung S5", Price = 2000, ImageUrl = "1.jpg", Description = "Nice Phone", IsApproved = true },
-            new Product() { Name = "Samsung S6", Price = 3000, ImageUrl = "2.jpg", Description = "Nice Phone", IsApproved = true },
-            new Product() { Name = "Samsung S7", Price = 4000, ImageUrl = "3.jpg", Description = "Nice Phone", IsApproved = false },
-            new Product() { Name = "Samsung S8", Price = 5000, ImageUrl = "4.jpg", Description = "Nice Phone", IsApproved = true },
-            new Product() { Name = "Samsung S9", Price = 6000, ImageUrl = "5.jpg", Description = "Nice Phone", IsApproved = true }
+            new Product() { Name = "Samsung S5", Url="samsung-s5", Price = 2000, ImageUrl = "1.jpg", Description = "Nice Phone", IsApproved = true },
+            new Product() { Name = "Samsung S6", Url="samsung-s6", Price = 3000, ImageUrl = "2.jpg", Description = "Nice Phone", IsApproved = true },
+            new Product() { Name = "Samsung S7", Url="samsung-s7", Price = 4000, ImageUrl = "3.jpg", Description = "Nice Phone", IsApproved = false },
+            new Product() { Name = "Samsung S8", Url="samsung-s8", Price = 5000, ImageUrl = "4.jpg", Description = "Nice Phone", IsApproved = true },
+            new Product() { Name = "Samsung S9", Url="samsung-s9", Price = 6000, ImageUrl = "5.jpg", Description = "Nice Phone", IsApproved = true }
         };
         
         public static Category[] Categories = {
