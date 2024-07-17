@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using shopapp.business.Abstract;
@@ -146,7 +147,8 @@ namespace shopapp.webui.Controllers
                 return NotFound();
             }
 
-            var entity = _categoryService.GetById((int)id);
+            var entity = _categoryService.GetByIdWithProducts((int)id);
+            
             if (entity == null) {
                 return NotFound();
             }
@@ -155,6 +157,9 @@ namespace shopapp.webui.Controllers
                 CategoryId = entity.CategoryId,
                 Name = entity.Name,
                 Url = entity.Url,
+                Products = entity.ProductCategories
+                    .Select(i => i.Product)
+                    .ToList()
             };
             return View(model);
         }
@@ -196,6 +201,12 @@ namespace shopapp.webui.Controllers
             TempData["message"] = JsonConvert.SerializeObject(msg);
             
             return RedirectToAction("CategoryList");
+        }
+    
+        [HttpPost]
+        public IActionResult DeleteFromCategory(int productId, int categoryId) {
+            _categoryService.DeleteFromCategory(productId, categoryId);
+            return Redirect("/admin/categories/" + categoryId);
         }
     }
 }

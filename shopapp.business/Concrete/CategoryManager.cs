@@ -13,6 +13,10 @@ namespace shopapp.business.Concrete
         {
             _categoryRepository = categoryRepository;
         }
+        public Category GetByIdWithProducts(int categoryId)
+        {
+            return _categoryRepository.GetByIdWithProducts(categoryId);
+        }
         public void Create(Category entity)
         {
             _categoryRepository.Create(entity);
@@ -38,9 +42,9 @@ namespace shopapp.business.Concrete
             _categoryRepository.Update(entity);
         }
 
-        public List<Category> GetPopularCategories()
-        { 
-            return _categoryRepository.GetPopularCategories();
+        public void DeleteFromCategory(int productId, int categoryId)
+        {
+            _categoryRepository.DeleteFromCategory(productId, categoryId);
         }
     }
 }
