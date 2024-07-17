@@ -3,19 +3,21 @@ using shopapp.entity;
 
 namespace shopapp.business.Abstract
 {
-    public interface IProductService
+    public interface IProductService : IValidator<Product>
     {
-        Product GetById(int id);
         List<Product> GetAll();
+        Product GetById(int id);
+        Product GetByIdWithCategories(int id);
         Product GetProductDetails(string url);
         List<Product> GetProductsByCategory(string name, int pageSize, int page);
         List<Product> GetHomePageProducts();
 
         List<Product> GetSearchResult(string searchString);
-
-        void Create(Product entity);
-        void Update(Product entity);
-        void Delete(Product entity);
         int GetCountByCategory(string category);
+
+        bool Create(Product entity);
+        bool Update(Product entity);
+        bool Update(Product entity, int[] categoryIds);
+        void Delete(Product entity);
     }
 }

@@ -3,13 +3,13 @@ using shopapp.entity;
 
 namespace shopapp.business.Abstract
 {
-    public interface ICategoryService
+    public interface ICategoryService: IValidator<Category>
     {
-        Category GetById(int id);
         List<Category> GetAll();
+        Category GetById(int id);
         Category GetByIdWithProducts(int categoryId);
-        void Create(Category entity);
-        void Update(Category entity);
+        bool Create(Category entity);
+        bool Update(Category entity);
         void Delete(Category entity);
         void DeleteFromCategory(int productId, int categoryId);
     }

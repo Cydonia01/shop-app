@@ -9,6 +9,8 @@ namespace shopapp.data.Abstract
         List<Product> GetProductsByCategory(string name, int pageSize, int page);
         List<Product> GetSearchResult(string searchString);
         List<Product> GetHomePageProducts();
+        Product GetByIdWithCategories(int id);
         int GetCountByCategory(string category);
+        void Update(Product entity, int[] categoryIds);
     }
 }

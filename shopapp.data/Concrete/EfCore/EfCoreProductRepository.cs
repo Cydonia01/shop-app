@@ -80,5 +80,46 @@ namespace shopapp.data.Concrete.EfCore
                 return products.ToList();
             }
         }
+
+        public Product GetByIdWithCategories(int id)
+        {
+            using(var context = new ShopContext())
+            {
+                return context.Products
+                    .Where(i => i.ProductId == id)
+                    .Include(i => i.ProductCategories)
+                    .ThenInclude(i => i.Category)
+                    .FirstOrDefault();
+            }
+        }
+
+        public void Update(Product entity, int[] categoryIds)
+        {
+            using(var context = new ShopContext())
+            {
+                var product = context.Products
+                    .Include(i => i.ProductCategories)
+                    .FirstOrDefault(i => i.ProductId == entity.ProductId);
+
+                if (product != null)
+                {
+                    product.Name = entity.Name;
+                    product.Url = entity.Url;
+                    product.Price = entity.Price;
+                    product.Description = entity.Description;
+                    product.ImageUrl = entity.ImageUrl;
+                    product.IsApproved = entity.IsApproved;
+                    product.IsHome = entity.IsHome;
+
+                    product.ProductCategories = categoryIds.Select(catid => new ProductCategory()
+                    {
+                        CategoryId = catid,
+                        ProductId = entity.ProductId
+                    }).ToList();
+
+                    context.SaveChanges();
+                }
+            }
+        }
     }
 }
