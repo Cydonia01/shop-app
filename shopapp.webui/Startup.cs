@@ -14,13 +14,19 @@ using shopapp.webui.Identity;
 using Microsoft.AspNetCore.Identity;
 using System;
 using Microsoft.AspNetCore.Http;
+using shopapp.webui.EmailServices;
+using Microsoft.Extensions.Configuration;
 
 namespace shopapp.webui
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        private IConfiguration _configuration;
+        
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationContext>(options => options.UseSqlite("Data Source=shopDb"));
@@ -41,7 +47,7 @@ namespace shopapp.webui
                 
                 // options.User.AllowedUserNameCharacters = "";
                 options.User.RequireUniqueEmail = true;
-                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedEmail = true;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
             });
 
@@ -64,6 +70,17 @@ namespace shopapp.webui
             
             AddScoped<IProductRepository, EfCoreProductRepository>();
             services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>();
+
+            services.AddScoped<IEmailSender, SmtpEmailSender>(
+                service => new SmtpEmailSender(
+                    _configuration["EmailSender:Host"],
+                    _configuration.GetValue<int>("EmailSender:Port"),
+                    _configuration.GetValue<bool>("EmailSender:EnableSSL"),
+                    _configuration["EmailSender:Username"],
+                    _configuration["EmailSender:Password"]
+                )
+            );
+
             services.AddControllersWithViews();
         }
 

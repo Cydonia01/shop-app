@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using shopapp.business.Abstract;
 using shopapp.entity;
+using shopapp.webui.Extensions;
 using shopapp.webui.Models;
 
 namespace shopapp.webui.Controllers
@@ -46,11 +47,18 @@ namespace shopapp.webui.Controllers
                 };
 
                 if(_productService.Create(entity)) {
-                    CreateMessage($"{entity.Name} was created successfully.", "success");
-                    
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Product Created.",
+                        Message = $"{entity.Name} was created successfully.",
+                        AlertType = "success"
+                    });                    
                     return RedirectToAction("ProductList");
                 }
-                CreateMessage(_productService.ErrorMessage, "danger");
+                TempData.Put("message", new AlertMessage() {
+                    Title = "Product not Created.",
+                    Message = _productService.ErrorMessage,
+                    AlertType = "danger"
+                });     
             }
             return View(model);
         }
@@ -111,11 +119,19 @@ namespace shopapp.webui.Controllers
                 }
 
                 if(_productService.Update(entity, categoryIds)) {
-                    CreateMessage($"{entity.Name} was updated successfully.", "success");
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Product Updated.",
+                        Message = $"{entity.Name} was updated successfully.",
+                        AlertType = "success"
+                    });
                     
                     return RedirectToAction("ProductList");
                 }
-                CreateMessage(_productService.ErrorMessage, "danger");
+                TempData.Put("message", new AlertMessage() {
+                    Title = "Product not Updated.",
+                    Message = _productService.ErrorMessage,
+                    AlertType = "danger"
+                });
             }
             ViewBag.Categories = _categoryService.GetAll();
             return View(model);
@@ -126,8 +142,11 @@ namespace shopapp.webui.Controllers
             if (entity != null) {
                 _productService.Delete(entity);
             }
-
-            CreateMessage($"{entity.Name} was deleted successfully.", "danger");
+            TempData.Put("message", new AlertMessage() {
+                Title = "Product Deleted.",
+                Message = $"{entity.Name} was deleted successfully.",
+                AlertType = "success"
+            });
             
             return RedirectToAction("ProductList");
         }
@@ -152,10 +171,18 @@ namespace shopapp.webui.Controllers
                 };
 
                 if (_categoryService.Create(entity)) {
-                    CreateMessage($"{entity.Name} category was created successfully.", "success");
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Category Created.",
+                        Message = $"{entity.Name} category was created successfully.",
+                        AlertType = "success"
+                    });
                     return RedirectToAction("CategoryList");
                 }
-                CreateMessage(_categoryService.ErrorMessage, "danger");
+                TempData.Put("message", new AlertMessage() {
+                    Title = "Category not Created.",
+                    Message = _categoryService.ErrorMessage,
+                    AlertType = "danger"
+                });
             }
             return View(model);
         }
@@ -196,11 +223,18 @@ namespace shopapp.webui.Controllers
                 entity.Url = model.Url;
 
                 if(_categoryService.Update(entity)) {
-                    CreateMessage($"{entity.Name} category was updated successfully.", "success");
-                    
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Category Updated.",
+                        Message = $"{entity.Name} category was updated successfully.",
+                        AlertType = "success"
+                    });
                     return RedirectToAction("CategoryList");
                 }
-                CreateMessage(_categoryService.ErrorMessage, "danger");
+                TempData.Put("message", new AlertMessage() {
+                    Title = "Category not Updated.",
+                    Message = _categoryService.ErrorMessage,
+                    AlertType = "danger"
+                });
             }
             return View(model);
         }
@@ -211,13 +245,12 @@ namespace shopapp.webui.Controllers
                 _categoryService.Delete(entity);
             }
 
-            var msg = new AlertMessage() {
+            TempData.Put("message", new AlertMessage() {
+                Title = "Category Deleted.",
                 Message = $"{entity.Name} category was deleted successfully.",
-                AlertType = "danger"
-            };
+                AlertType = "success"
+            });
 
-            TempData["message"] = JsonConvert.SerializeObject(msg);
-            
             return RedirectToAction("CategoryList");
         }
     
@@ -226,14 +259,5 @@ namespace shopapp.webui.Controllers
             _categoryService.DeleteFromCategory(productId, categoryId);
             return Redirect("/admin/categories/" + categoryId);
         }
-
-        private void CreateMessage(string message, string alertType) {
-            var msg = new AlertMessage() {
-                Message = message,
-                AlertType = alertType
-            };
-            TempData["message"] = JsonConvert.SerializeObject(msg);
-        }
-
     }
 }

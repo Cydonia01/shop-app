@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using shopapp.webui.EmailServices;
+using shopapp.webui.Extensions;
 using shopapp.webui.Identity;
 using shopapp.webui.Models;
 
@@ -15,10 +13,12 @@ namespace shopapp.webui.Controllers
     {
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
+        private IEmailSender _emailSender;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager) {
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender) {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         public IActionResult Login(string ReturnUrl=null) {
@@ -82,9 +82,9 @@ namespace shopapp.webui.Controllers
                     userId = user.Id,
                     token = code
                 });
-                System.Console.WriteLine(url);
 
                 // email
+                await _emailSender.SendEmailAsync(model.Email, "Confirm your email", $"Click <a href='https://localhost:5001{url}'>here</a> to confirm your email.");
 
                 return RedirectToAction("Login", "Account");
             }
@@ -93,12 +93,80 @@ namespace shopapp.webui.Controllers
         }
         public async Task<IActionResult> Logout() {
             await _signInManager.SignOutAsync();
+            TempData.Put("message", new AlertMessage() {
+                Title = "Logged Out.",
+                Message = "You have logged out successfully.",
+                AlertType = "warning"
+            });
             return Redirect("~/");
+        }
+
+        public IActionResult ForgotPassword() {
+            return View();
+        }
+
+        [HttpPost]
+        public async  Task<IActionResult> ForgotPassword(string Email) {
+            if(string.IsNullOrEmpty(Email)) {
+                return View();
+            }
+            var user = await _userManager.FindByEmailAsync(Email);
+            
+            if(user == null) {
+                return View();
+            }
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            // generate token
+            var url = Url.Action("ResetPassword", "Account", new {
+                userId = user.Id,
+                token = code
+            });
+
+            // email
+            await _emailSender.SendEmailAsync(Email, "Reset Password", $"Click <a href='https://localhost:5001{url}'>here</a> to reset your password.");
+
+            return View();
+        }
+
+        public IActionResult ResetPassword(string userId, string token) {
+            if(userId == null || token == null) {
+                return RedirectToAction("Home", "Index");
+            }
+            var model = new ResetPasswordModel() {
+                Token = token
+            };
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel model) {
+            if (!ModelState.IsValid) {
+                return View(model);
+            }
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if(user == null) {
+                return RedirectToAction("Index", "Home");
+            }
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            if (result.Succeeded) {
+                TempData.Put("message", new AlertMessage() {
+                    Title = "Password Reset.",
+                    Message = "Your password was reset successfully.",
+                    AlertType = "success"
+                });
+                return RedirectToAction("Login", "Account");
+            }
+            return View(model);
         }
 
         public async Task<IActionResult> ConfirmEmail(string userId, string token) {
             if (userId == null || token == null) {
-                CreateMessage("Invalid token.", "danger");
+                TempData.Put("message", new AlertMessage() {
+                    Title = "Invalid token.",
+                    Message = "Invalid token.",
+                    AlertType = "danger"
+                });
                 return View();
             }
             var user = await _userManager.FindByIdAsync(userId);
@@ -106,20 +174,20 @@ namespace shopapp.webui.Controllers
             if (user != null) {
                 var result = await _userManager.ConfirmEmailAsync(user, token);
                 if (result.Succeeded) {
-                    CreateMessage("Your email has been confirmed.", "success");
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Email Confirmed.",
+                        Message = "Your email has been confirmed.",
+                        AlertType = "success"
+                    });
                     return View();
                 }
             }
-            CreateMessage("Your email could not be confirmed.", "warning");
+            TempData.Put("message", new AlertMessage() {
+                Title = "Email not confirmed.",
+                Message = "Your email could not be confirmed.",
+                AlertType = "warning"
+            });
             return View();
-        }
-
-        private void CreateMessage(string message, string alertType) {
-            var msg = new AlertMessage() {
-                Message = message,
-                AlertType = alertType
-            };
-            TempData["message"] = JsonConvert.SerializeObject(msg);
         }
     }
 
