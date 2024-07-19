@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using shopapp.business.Abstract;
 using shopapp.webui.EmailServices;
 using shopapp.webui.Extensions;
 using shopapp.webui.Identity;
@@ -15,11 +16,13 @@ namespace shopapp.webui.Controllers
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
         private IEmailSender _emailSender;
+        private ICartService _cartService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender) {
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender, ICartService cartService) {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _cartService = cartService;
         }
 
         public IActionResult Login(string ReturnUrl=null) {
@@ -175,6 +178,7 @@ namespace shopapp.webui.Controllers
             if (user != null) {
                 var result = await _userManager.ConfirmEmailAsync(user, token);
                 if (result.Succeeded) {
+                    _cartService.InitializeCart(user.Id);
                     TempData.Put("message", new AlertMessage() {
                         Title = "Email Confirmed.",
                         Message = "Your email has been confirmed.",
