@@ -85,7 +85,7 @@ namespace shopapp.webui
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             app.UseStaticFiles();
             app.UseStaticFiles(
@@ -110,6 +110,31 @@ namespace shopapp.webui
             // localhost:5000/products/list/3
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "adminuseredit",
+                    pattern: "admin/user/{id?}",
+                    defaults: new {controller="Admin", action="UserEdit"}
+                );
+                endpoints.MapControllerRoute(
+                    name: "adminusers",
+                    pattern: "admin/user/list",
+                    defaults: new {controller="Admin", action="UserList"}
+                );
+                endpoints.MapControllerRoute(
+                    name: "adminroles",
+                    pattern: "admin/role/list",
+                    defaults: new {controller="Admin", action="RoleList"}
+                );
+                endpoints.MapControllerRoute(
+                    name: "adminrolecreate",
+                    pattern: "admin/role/create",
+                    defaults: new {controller="Admin", action="RoleCreate"}
+                );
+                endpoints.MapControllerRoute(
+                    name: "adminroleedit",
+                    pattern: "admin/role/{id?}",
+                    defaults: new {controller="Admin", action="RoleEdit"}
+                );
                 endpoints.MapControllerRoute(
                     name: "admincategories",
                     pattern: "admin/categories",
@@ -166,6 +191,7 @@ namespace shopapp.webui
                     pattern: "{controller=Home}/{action=Index}/{id?}"
                 );
             });
+            SeedIdentity.Seed(userManager, roleManager, configuration).Wait();
         }
     }
 }

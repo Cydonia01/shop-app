@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using shopapp.webui.EmailServices;
@@ -187,6 +188,10 @@ namespace shopapp.webui.Controllers
                 Message = "Your email could not be confirmed.",
                 AlertType = "warning"
             });
+            return View();
+        }
+
+        public IActionResult AccessDenied() {
             return View();
         }
     }
