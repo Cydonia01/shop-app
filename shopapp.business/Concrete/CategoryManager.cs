@@ -2,39 +2,37 @@ using shopapp.business.Abstract;
 using shopapp.entity;
 using System.Collections.Generic;
 using shopapp.data.Abstract;
-using System.Runtime.InteropServices;
 
 namespace shopapp.business.Concrete
 {
     public class CategoryManager: ICategoryService
     {
-        private ICategoryRepository _categoryRepository;
-
-
-        public CategoryManager(ICategoryRepository categoryRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryManager(IUnitOfWork unitOfWork)
         {
-            _categoryRepository = categoryRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public List<Category> GetAll()
         {
-            return _categoryRepository.GetAll();
+            return _unitOfWork.Categories.GetAll();
         }
 
         public Category GetByIdWithProducts(int categoryId)
         {
-            return _categoryRepository.GetByIdWithProducts(categoryId);
+            return _unitOfWork.Categories.GetByIdWithProducts(categoryId);
         }
 
         public Category GetById(int id)
         {
-            return _categoryRepository.GetById(id);
+            return _unitOfWork.Categories.GetById(id);
         }
 
         public bool Create(Category entity)
         {
             if (Validate(entity)) {
-                _categoryRepository.Create(entity);
+                _unitOfWork.Categories.Create(entity);
+                _unitOfWork.Save();
                 return true;
             }
             return false;
@@ -42,13 +40,15 @@ namespace shopapp.business.Concrete
 
         public void Delete(Category entity)
         {
-            _categoryRepository.Delete(entity);
+            _unitOfWork.Categories.Delete(entity);
+            _unitOfWork.Save();
         }
 
         public bool Update(Category entity)
         {
             if (Validate(entity)) {
-                _categoryRepository.Update(entity);
+                _unitOfWork.Categories.Update(entity);
+                _unitOfWork.Save();
                 return true;
             }
             return false;
@@ -56,7 +56,7 @@ namespace shopapp.business.Concrete
 
         public void DeleteFromCategory(int productId, int categoryId)
         {
-            _categoryRepository.DeleteFromCategory(productId, categoryId);
+            _unitOfWork.Categories.DeleteFromCategory(productId, categoryId);
         }
 
         public string ErrorMessage { get; set; }

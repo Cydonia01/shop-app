@@ -30,7 +30,12 @@ namespace shopapp.webui
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlite("Data Source=shopDb"));
+            // services.AddDbContext<ApplicationContext>(options => options.UseSqlite(_configuration.GetConnectionString("SqliteConnection")));
+            // services.AddDbContext<ShopContext>(options => options.UseSqlite(_configuration.GetConnectionString("SqliteConnection")));
+            
+            services.AddDbContext<ApplicationContext>(options => options.UseMySql(_configuration.GetConnectionString("MySqlConnection")));
+            services.AddDbContext<ShopContext>(options => options.UseMySql(_configuration.GetConnectionString("MySqlConnection")));
+
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options => {
@@ -70,10 +75,7 @@ namespace shopapp.webui
             services.AddScoped<ICartService, CartManager>();
             services.AddScoped<IOrderService, OrderManager>();
             
-            services.AddScoped<IProductRepository, EfCoreProductRepository>();
-            services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>();
-            services.AddScoped<ICartRepository, EfCoreCartRepository>();
-            services.AddScoped<IOrderRepository, EfCoreOrderRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IEmailSender, SmtpEmailSender>(
                 service => new SmtpEmailSender(
@@ -89,7 +91,8 @@ namespace shopapp.webui
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration, UserManager<User> userManager, RoleManager<IdentityRole> roleManager,
+        ICartService cartService)
         {
             app.UseStaticFiles();
             app.UseStaticFiles(
@@ -210,7 +213,7 @@ namespace shopapp.webui
                     pattern: "{controller=Home}/{action=Index}/{id?}"
                 );
             });
-            SeedIdentity.Seed(userManager, roleManager, configuration).Wait();
+            SeedIdentity.Seed(userManager, roleManager, configuration, cartService).Wait();
         }
     }
 }
