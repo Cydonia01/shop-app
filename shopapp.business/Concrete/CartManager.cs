@@ -37,6 +37,11 @@ namespace shopapp.business.Concrete
             }
         }
 
+        public void ClearCart(int cartId)
+        {
+            _cartRepository.ClearCart(cartId);
+        }
+
         public void DeleteFromCart(string userId, int productId)
         {
             var cart = GetCartByUserId(userId);
@@ -55,5 +60,6 @@ namespace shopapp.business.Concrete
         {
             _cartRepository.Create(new entity.Cart() { UserId = userId });
         }
+        
     }
 }

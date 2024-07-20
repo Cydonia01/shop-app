@@ -16,6 +16,7 @@ using System;
 using Microsoft.AspNetCore.Http;
 using shopapp.webui.EmailServices;
 using Microsoft.Extensions.Configuration;
+using shopapp.entity;
 
 namespace shopapp.webui
 {
@@ -67,10 +68,12 @@ namespace shopapp.webui
             services.AddScoped<ICategoryService, CategoryManager>();
             services.AddScoped<IProductService, ProductManager>();
             services.AddScoped<ICartService, CartManager>();
+            services.AddScoped<IOrderService, OrderManager>();
             
             services.AddScoped<IProductRepository, EfCoreProductRepository>();
             services.AddScoped<ICategoryRepository, EfCoreCategoryRepository>();
             services.AddScoped<ICartRepository, EfCoreCartRepository>();
+            services.AddScoped<IOrderRepository, EfCoreOrderRepository>();
 
             services.AddScoped<IEmailSender, SmtpEmailSender>(
                 service => new SmtpEmailSender(
@@ -111,6 +114,16 @@ namespace shopapp.webui
             // localhost:5000/products/list/3
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "orders",
+                    pattern: "orders",
+                    defaults: new {controller="Cart", action="GetOrders"}
+                );
+                endpoints.MapControllerRoute(
+                    name: "checkout",
+                    pattern: "checkout",
+                    defaults: new {controller="Cart", action="Checkout"}
+                );
                 endpoints.MapControllerRoute(
                     name: "cart",
                     pattern: "cart",

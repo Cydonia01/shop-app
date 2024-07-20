@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using shopapp.data.Concrete.EfCore;
 
 namespace shopapp.data.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    partial class ShopContextModelSnapshot : ModelSnapshot
+    [Migration("20240720140529_AddingOrderEntities")]
+    partial class AddingOrderEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,9 +85,6 @@ namespace shopapp.data.Migrations
                     b.Property<string>("City")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ConversationId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
@@ -105,12 +104,6 @@ namespace shopapp.data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("OrderState")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("PaymentId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("PaymentType")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Phone")
