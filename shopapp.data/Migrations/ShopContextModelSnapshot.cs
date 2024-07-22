@@ -17,6 +17,55 @@ namespace shopapp.data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("shopapp.entity.BillingAddress", b =>
+                {
+                    b.Property<int>("BillingAddressId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("City")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("BillingAddressId");
+
+                    b.ToTable("BillingAdresses");
+                });
+
+            modelBuilder.Entity("shopapp.entity.Card", b =>
+                {
+                    b.Property<int>("CardId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CardName")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("CardNumber")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Cvc")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ExpirationMonth")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ExpirationYear")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("CardId");
+
+                    b.ToTable("Cards");
+                });
+
             modelBuilder.Entity("shopapp.entity.Cart", b =>
                 {
                     b.Property<int>("Id")
@@ -102,15 +151,15 @@ namespace shopapp.data.Migrations
 
             modelBuilder.Entity("shopapp.entity.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Address")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<int>("BillingAddressId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("City")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<int>("CardId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ConversationId")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -145,10 +194,19 @@ namespace shopapp.data.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<int>("ShippingAddressId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.HasKey("Id");
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("BillingAddressId");
+
+                    b.HasIndex("CardId");
+
+                    b.HasIndex("ShippingAddressId");
 
                     b.ToTable("Orders");
                 });
@@ -338,6 +396,29 @@ namespace shopapp.data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("shopapp.entity.ShippingAddress", b =>
+                {
+                    b.Property<int>("ShippingAddressId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("City")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ZipCode")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("ShippingAddressId");
+
+                    b.ToTable("ShippingAdresses");
+                });
+
             modelBuilder.Entity("shopapp.entity.CartItem", b =>
                 {
                     b.HasOne("shopapp.entity.Cart", "Cart")
@@ -349,6 +430,27 @@ namespace shopapp.data.Migrations
                     b.HasOne("shopapp.entity.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("shopapp.entity.Order", b =>
+                {
+                    b.HasOne("shopapp.entity.BillingAddress", "BillingAddress")
+                        .WithMany()
+                        .HasForeignKey("BillingAddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("shopapp.entity.Card", "Card")
+                        .WithMany()
+                        .HasForeignKey("CardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("shopapp.entity.ShippingAddress", "ShippingAddress")
+                        .WithMany()
+                        .HasForeignKey("ShippingAddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

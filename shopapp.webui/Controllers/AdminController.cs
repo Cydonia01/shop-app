@@ -85,7 +85,7 @@ namespace shopapp.webui.Controllers
             var members = new List<User>();
             var nonmembers = new List<User>();
 
-            foreach (var user in _userManager.Users) {
+            foreach (var user in _userManager.Users.ToList()) {
                 var list = await _userManager.IsInRoleAsync(user, role.Name) ? members : nonmembers;
                 list.Add(user);
             }
@@ -156,21 +156,21 @@ namespace shopapp.webui.Controllers
             return View(model);
         }
 
-        // [HttpPost]
-        // public async Task<IActionResult> RoleDelete(string id) {
-        //     var role = await _roleManager.FindByIdAsync(id);
-        //     if(role != null) {
-        //         var result = await _roleManager.DeleteAsync(role);
-        //         if(result.Succeeded) {
-        //             return RedirectToAction("RoleList");
-        //         } else {
-        //             foreach (var error in result.Errors) {
-        //                 ModelState.AddModelError("", error.Description);
-        //             }
-        //         }
-        //     }
-        //     return RedirectToAction("RoleList");
-        // }        
+        [HttpPost]
+        public async Task<IActionResult> RoleDelete(string roleId) {
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if(role != null) {
+                var result = await _roleManager.DeleteAsync(role);
+                if(result.Succeeded) {
+                    return RedirectToAction("RoleList");
+                } else {
+                    foreach (var error in result.Errors) {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+            }
+            return RedirectToAction("RoleList");
+        }        
         public IActionResult ProductList() {
             return View(new ProductListViewModel() {
                 Products = _productService.GetAll()

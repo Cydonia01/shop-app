@@ -87,7 +87,7 @@ namespace shopapp.webui.Controllers
                         Name = i.Product.Name,
                         Price = (double)i.Product.Price,
                         ImageUrl = i.Product.ImageUrl,
-                        Quantity = i.Quantity
+                        Quantity = i.Quantity,
                     }).ToList()
                 }
             };
@@ -111,11 +111,12 @@ namespace shopapp.webui.Controllers
                         Name = i.Product.Name,
                         Price = (double)i.Product.Price,
                         ImageUrl = i.Product.ImageUrl,
-                        Quantity = i.Quantity
+                        Quantity = i.Quantity,
                     }).ToList()
                 };
-
-                var payment = PaymentProcess(model);
+                
+                var user = _userManager.FindByIdAsync(userId).Result;
+                var payment = PaymentProcess(model, user);
 
                 if(payment.Status == "success")
                 {
@@ -139,33 +140,35 @@ namespace shopapp.webui.Controllers
             var orderListModel = new List<OrderListModel>();
             OrderListModel orderModel;
             foreach (var order in orders) {
-                orderModel = new OrderListModel();
-                orderModel.OrderId = order.Id;
-                orderModel.OrderNumber = order.OrderNumber;
-                orderModel.OrderDate = order.OrderDate;
-                orderModel.Phone = order.Phone;
-                orderModel.Email = order.Email;
-                orderModel.FirstName = order.FirstName;
-                orderModel.LastName = order.LastName;
-                orderModel.Address = order.Address;
-                orderModel.City = order.City;
-                orderModel.PaymentType = order.PaymentType;
-                orderModel.OrderState = order.OrderState;
-                
-                orderModel.OrderItems = order.OrderItems.Select(i => new OrderItemModel() {
-                    OrderItemId = i.Id,
-                    Name = i.Product.Name,
-                    Price = (double) i.Price,
-                    Quantity = i.Quantity,
-                    ImageUrl = i.Product.ImageUrl
-                }).ToList();
+                orderModel = new OrderListModel
+                {
+                    OrderId = order.OrderId,
+                    OrderNumber = order.OrderNumber,
+                    OrderDate = order.OrderDate,
+                    Phone = order.Phone,
+                    Email = order.Email,
+                    FirstName = order.FirstName,
+                    LastName = order.LastName,
+                    Address = order.ShippingAddress.Address,
+                    City = order.ShippingAddress.City,
+                    PaymentType = order.PaymentType,
+                    OrderState = order.OrderState,
+
+                    OrderItems = order.OrderItems.Select(i => new OrderItemModel()
+                    {
+                        OrderItemId = i.Id,
+                        Name = i.Product.Name,
+                        Price = (double)i.Price,
+                        Quantity = i.Quantity,
+                        ImageUrl = i.Product.ImageUrl
+                    }).ToList()
+                };
 
                 orderListModel.Add(orderModel);
 
             }
             return View("Orders", orderListModel);
         }
-
 
         private void ClearCart(int cartId)
         {
@@ -174,23 +177,44 @@ namespace shopapp.webui.Controllers
 
         private void SaveOrder(OrderModel model, Payment payment, string userId)
         {
-            var order = new Order();
-
-            order.OrderNumber = new Random().Next(111111, 999999).ToString();
-            order.OrderState = EnumOrderState.completed;
-            order.PaymentType = EnumPaymentType.CreditCard;
-            order.PaymentId = payment.PaymentId;
-            order.ConversationId = payment.ConversationId;
-            order.OrderDate = DateTime.Now;
-            order.FirstName = model.FirstName;
-            order.LastName = model.LastName;
-            order.Email = model.Email;
-            order.Phone = model.Phone;
-            order.Address = model.Address;
-            order.City = model.City;
-            order.UserId = userId;
-            order.Note = model.Note;
-            order.OrderItems = new List<entity.OrderItem>();
+            var order = new Order
+            {
+                OrderNumber = new Random().Next(100000, 999999).ToString(),
+                OrderState = EnumOrderState.completed,
+                PaymentType = EnumPaymentType.CreditCard,
+                PaymentId = payment.PaymentId,
+                ConversationId = payment.ConversationId,
+                OrderDate = DateTime.Now,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                Phone = model.Phone,
+                UserId = userId,
+                Note = model.Note,
+                OrderItems = new List<entity.OrderItem>(),
+                ShippingAddress = new ShippingAddress
+                {
+                    City = model.ShipModel.City,
+                    Country = model.ShipModel.Country,
+                    Address = model.ShipModel.Address,
+                    ZipCode = model.ShipModel.ZipCode
+                },
+                BillingAddress = new BillingAddress
+                {
+                    City = model.BillModel.City,
+                    Country = model.BillModel.Country,
+                    Address = model.BillModel.Address,
+                    ZipCode = model.BillModel.ZipCode
+                },
+                Card = new shopapp.entity.Card
+                {
+                    CardName = model.CardModel.CardName,
+                    CardNumber = model.CardModel.CardNumber,
+                    ExpirationMonth = model.CardModel.ExpirationMonth,
+                    ExpirationYear = model.CardModel.ExpirationYear,
+                    Cvc = model.CardModel.Cvc
+                }
+            };
 
             foreach (var item in model.CartModel.CartItems)
             {
@@ -206,31 +230,37 @@ namespace shopapp.webui.Controllers
             _orderService.Create(order);
         }
 
-        private Payment PaymentProcess(OrderModel model)
+        private Payment PaymentProcess(OrderModel model, User user)
         {
-            Options options = new Options();
-            options.ApiKey = "your-api";
-            options.SecretKey = "your-secret";
-            options.BaseUrl = "https://sandbox-api.iyzipay.com";
-                    
-            CreatePaymentRequest request = new CreatePaymentRequest();
-            request.Locale = Locale.TR.ToString();
-            request.ConversationId = new Random().Next(111111111, 999999999).ToString();
-            request.Price = model.CartModel.TotalPrice().ToString();
-            request.PaidPrice = model.CartModel.TotalPrice().ToString();
-            request.Currency = Currency.TRY.ToString();
-            request.Installment = 1;
-            request.BasketId = "B67832";
-            request.PaymentChannel = PaymentChannel.WEB.ToString();
-            request.PaymentGroup = PaymentGroup.PRODUCT.ToString();
+            Options options = new Options
+            {
+                ApiKey = "",
+                SecretKey = "",
+                BaseUrl = "https://sandbox-api.iyzipay.com"
+            };
 
-            PaymentCard paymentCard = new PaymentCard();
-            paymentCard.CardHolderName = model.CardName;
-            paymentCard.CardNumber = model.CardNumber;
-            paymentCard.ExpireMonth = model.ExpirationMonth;
-            paymentCard.ExpireYear = model.ExpirationYear;
-            paymentCard.Cvc = model.Cvc;
-            paymentCard.RegisterCard = 0;
+            CreatePaymentRequest request = new CreatePaymentRequest
+            {
+                Locale = Locale.TR.ToString(),
+                ConversationId = new Random().Next(111111111, 999999999).ToString(),
+                Price = model.CartModel.TotalPrice().ToString(),
+                PaidPrice = model.CartModel.TotalPrice().ToString(),
+                Currency = Currency.TRY.ToString(),
+                Installment = 1,
+                BasketId = $"B{new Random().Next(10000, 100000)}",
+                PaymentChannel = PaymentChannel.WEB.ToString(),
+                PaymentGroup = PaymentGroup.PRODUCT.ToString()
+            };
+
+            PaymentCard paymentCard = new PaymentCard
+            {
+                CardHolderName = model.CardModel.CardName,
+                CardNumber = model.CardModel.CardNumber,
+                ExpireMonth = model.CardModel.ExpirationMonth,
+                ExpireYear = model.CardModel.ExpirationYear,
+                Cvc = model.CardModel.Cvc,
+                RegisterCard = 0
+            };
             request.PaymentCard = paymentCard;
 
             // paymentCard.CardNumber = "5528790000000008";
@@ -238,49 +268,56 @@ namespace shopapp.webui.Controllers
             // paymentCard.ExpireYear = "2030";
             // paymentCard.Cvc = "123";
 
-            Buyer buyer = new Buyer();
-            buyer.Id = "BY789";
-            buyer.Name = model.FirstName;
-            buyer.Surname = model.LastName;
-            buyer.GsmNumber = model.Phone;
-            buyer.Email = model.Email;
-            buyer.IdentityNumber = "74300864791";
-            buyer.LastLoginDate = "2015-10-05 12:43:35";
-            buyer.RegistrationDate = "2013-04-21 15:12:09";
-            buyer.RegistrationAddress = "Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1";
-            buyer.Ip = "85.34.78.112";
-            buyer.City = model.City;
-            buyer.Country = "Turkey";
-            buyer.ZipCode = "34732";
+            Buyer buyer = new Buyer
+            {
+                Id = $"BY{new Random().Next(100, 999)}",
+                Name = model.FirstName,
+                Surname = model.LastName,
+                GsmNumber = model.Phone,
+                Email = model.Email,
+                IdentityNumber = "74300864791",
+                LastLoginDate = "2015-10-05 12:43:35",
+                RegistrationDate = "2013-04-21 15:12:09",
+                RegistrationAddress = "Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1",
+                Ip = "85.34.78.112",
+                City = model.ShipModel.City,
+                Country = model.ShipModel.Country,
+                ZipCode = model.ShipModel.ZipCode
+            };
             request.Buyer = buyer;
 
-            Address shippingAddress = new Address();
-            shippingAddress.ContactName = "Jane Doe";
-            shippingAddress.City = "Istanbul";
-            shippingAddress.Country = "Turkey";
-            shippingAddress.Description = "Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1";
-            shippingAddress.ZipCode = "34742";
+            Address shippingAddress = new Address
+            {
+                ContactName = model.FirstName + " " + model.LastName,
+                City = model.ShipModel.City,
+                Country = model.ShipModel.Country,
+                Description = model.ShipModel.Address,
+                ZipCode = model.ShipModel.ZipCode
+            };
             request.ShippingAddress = shippingAddress;
 
-            Address billingAddress = new Address();
-            billingAddress.ContactName = "Jane Doe";
-            billingAddress.City = "Istanbul";
-            billingAddress.Country = "Turkey";
-            billingAddress.Description = "Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1";
-            billingAddress.ZipCode = "34742";
+            Address billingAddress = new Address
+            {
+                ContactName = model.FirstName + " " + model.LastName,
+                City = model.BillModel.City,
+                Country = model.BillModel.Country,
+                Description = model.BillModel.Address,
+                ZipCode = model.BillModel.ZipCode
+            };
             request.BillingAddress = billingAddress;
 
             List<BasketItem> basketItems = new List<BasketItem>();
 
             BasketItem basketItem;
             foreach (var item in model.CartModel.CartItems) {
-                basketItem = new BasketItem();
-                basketItem.Id = item.ProductId.ToString();
-                basketItem.Name = item.Name;
-                basketItem.Category1 = "Collectibles";
-                basketItem.Category2 = "Accessories";
-                basketItem.ItemType = BasketItemType.PHYSICAL.ToString();
-                basketItem.Price = (item.Price * item.Quantity).ToString();
+                basketItem = new BasketItem
+                {
+                    Id = item.ProductId.ToString(),
+                    Name = item.Name,
+                    Category1 = "Phone",
+                    ItemType = BasketItemType.PHYSICAL.ToString(),
+                    Price = (item.Price * item.Quantity).ToString()
+                };
 
                 basketItems.Add(basketItem);
             }

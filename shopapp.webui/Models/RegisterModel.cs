@@ -29,6 +29,9 @@ namespace shopapp.webui.Models
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
+        public string ZipCode { get; set; }
 
     }
 }

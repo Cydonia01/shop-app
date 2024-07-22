@@ -1,6 +1,7 @@
 @model ProductListViewModel
-
-@await Html.PartialAsync("_header")
+@section Jumbotron{
+    @await Html.PartialAsync("_header")
+}
 <div class="row">
     <div class="col-md-3">
         @await Component.InvokeAsync("Categories")

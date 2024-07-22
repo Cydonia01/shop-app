@@ -104,7 +104,7 @@ namespace shopapp.webui
             );
             if (env.IsDevelopment())
             {
-                SeedDatabase.Seed();
+                // SeedDatabase.Seed();
                 app.UseDeveloperExceptionPage();
             }
 
@@ -112,9 +112,6 @@ namespace shopapp.webui
             app.UseRouting();
             app.UseAuthorization();
 
-            // localhost:5000
-            // localhost:5000/products/details/2
-            // localhost:5000/products/list/3
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

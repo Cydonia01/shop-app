@@ -16,6 +16,9 @@ namespace shopapp.data.Concrete.EfCore
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Card> Cards { get; set; }
+        public DbSet<BillingAddress> BillingAdresses { get; set; }
+        public DbSet<ShippingAddress> ShippingAdresses { get; set; }
 
         // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         // {

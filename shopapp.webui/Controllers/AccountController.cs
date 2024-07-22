@@ -76,7 +76,10 @@ namespace shopapp.webui.Controllers
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 UserName = model.UserName,
-                Email = model.Email
+                Email = model.Email,
+                City = model.City,
+                Country = model.Country,
+                ZipCode = model.ZipCode
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if(result.Succeeded) {
