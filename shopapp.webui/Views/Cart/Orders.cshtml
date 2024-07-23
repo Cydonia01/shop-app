@@ -25,18 +25,18 @@ else {
             <tbody>
                 @foreach (var orderItem in order.OrderItems) {
                     <tr>
-                        <td><img src="~/img/@orderItem.ImageUrl" alt="" width="50"></td>
+                        <td class="text-center"><img src="~/img/@orderItem.ImageUrl" width="50"></td>
                         <td>@orderItem.Name</td>
-                        <td>@orderItem.Price</td>
+                        <td>@orderItem.Price.ToString("c")</td>
                         <td>@orderItem.Quantity</td>
                     </tr>
                 }
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="2">Customer Name</td>
+                    <td colspan="2">Customer Name:</td>
                     <td>@order.FirstName @order.LastName</td>
-                    <td rowspan="6">Total: @order.TotalPrice().ToString("c")</td>
+                    <td class="text-center" rowspan="6">Total: @order.TotalPrice().ToString("c")</td>
                 </tr>
                 <tr>
                     <td colspan="2">Address: </td>
@@ -49,6 +49,10 @@ else {
                 <tr>
                     <td colspan="2">Phone: </td>
                     <td>@order.Phone</td>
+                </tr>
+                <tr>
+                    <td colspan="2">Note: </td>
+                    <td>@order.Note</td>
                 </tr>
                 <tr>
                     <td colspan="2">Order Status: </td>

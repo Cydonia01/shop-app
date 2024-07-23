@@ -1,6 +1,5 @@
 @model RoleDetails
-
-<h1 class="h3">Edit Role</h1>
+<h1 class="h3 mt-3">Edit Role</h1>
 <hr>
 
 <div class="row">
@@ -8,7 +7,7 @@
         <form asp-controller="Admin" asp-action="RoleEdit">
             <input type="hidden" name="RoleId" value="@Model.Role.Id">
             <input type="hidden" name="RoleName" value="@Model.Role.Name">
-            <h6 class="bg-info text-white p-1">
+            <h6 class="bg-info text-white p-2">
                 Add to @Model.Role.Name
             </h6>
             <table class="table table-bordered table-sm">
@@ -28,7 +27,7 @@
                 }
             </table>
             <hr>
-            <h6 class="bg-info text-white p-1">
+            <h6 class="bg-info text-white p-2">
                 Remove from @Model.Role.Name
             </h6>
             <table class="table table-bordered table-sm">
@@ -47,6 +46,7 @@
                     }
                 }
             </table>
+            <a href="/admin/role/list" class="btn btn-danger"><i class="fas fa-light fa-left-long"></i> Go Back</a>
             <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>
     </div>

@@ -12,20 +12,18 @@
     </script>
 }
 
-<div class="row">
+<div class="row mt-3">
     <div class="col-md-12">
         <h1 class="h3">User List</h1>
-        <hr>
-        <a class="btn btn-primary btn-sm mb-2" href="/admin/user/create">Create User</a>
         <hr>
         <table id="myTable" class="table table-bordered">
             <thead>
                 <tr>
-                    <td>FirstName</td>
-                    <td>LastName</td>
-                    <td>UserName</td>
+                    <td>First Name</td>
+                    <td>Last Name</td>
+                    <td>Username</td>
                     <td>Email</td>
-                    <td>EmailConfirmed</td>
+                    <td>Email Confirmed</td>
                     <td style="width: 160px;"></td>
                 </tr>
             </thead>
@@ -38,11 +36,18 @@
                             <td>@item.LastName</td>
                             <td>@item.UserName</td>
                             <td>@item.Email</td>
-                            <td>@item.EmailConfirmed</td>
+                            <td class="text-center">
+                                @if(item.EmailConfirmed) {
+                                    <i class="fas fa-check-circle" style="color: green;"></i>
+                                }
+                                else {
+                                    <i class="fas fa-times-circle" style="color: #dd1717;"></i>
+                                }
+                            </td>
                             <td>
                                 <a href="/admin/user/@item.Id" class="btn btn-primary btn-sm mr-2">Edit</a>
-                                <form action="/admin/user/delete" method="POST" style="display: inline;">
-                                    <input type="hidden" name="UserId" value="@item.Id">
+                                <form asp-controller="Admin" asp-action="UserDelete" method="POST" style="display: inline;">
+                                    <input type="hidden" name="userId" value="@item.Id">
                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                 </form>
                             </td>

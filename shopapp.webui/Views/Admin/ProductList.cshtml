@@ -11,7 +11,7 @@
                     <td style="width: 30px;">Id</td>
                     <td style="width: 100px;">Image</td>
                     <td>Name</td>
-                    <td style="width: 20px;">Price</td>
+                    <td style="width: 80px;">Price</td>
                     <td style="width: 20px;">Home</td>
                     <td style="width: 20px;">Approved</td>
                     <td style="width: 150px;"></td>
@@ -25,7 +25,7 @@
                             <td>@item.ProductId</td>
                             <td><img src="~/img/@item.ImageUrl" width="80"/></td>
                             <td>@item.Name</td>
-                            <td>@item.Price</td>
+                            <td><i class="fas fa-turkish-lira-sign"></i> @item.Price</td>
                             <td class="text-center">
                                 @if(item.IsHome) {
                                     <i class="fas fa-check-circle" style="color: green;"></i>

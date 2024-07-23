@@ -1,13 +1,8 @@
 @model ProductModel
 
-<h1 class="h3">Edit Product</h1>
+<h1 class="h3 mt-3">Edit Product</h1>
 <hr>
 <form action="/admin/productedit" method="POST" enctype="multipart/form-data">
-    <div class="row">
-        <div class="col-md-12">
-            <div asp-validation-summary="All" class="text-danger"></div>
-        </div>
-    </div>
     <div class="row">
         <div class="col-md-8">
             <input type="hidden" asp-for="ProductId" value="@Model.ProductId">

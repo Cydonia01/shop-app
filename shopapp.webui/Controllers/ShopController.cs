@@ -44,11 +44,11 @@ namespace shopapp.webui.Controllers
         }
 
         public IActionResult Search(string q) {
+            q ??= "";
             var productViewModel = new ProductListViewModel {
                 Products = _productService.GetSearchResult(q)
             };
             return View(productViewModel);
         }
-
     }
 }

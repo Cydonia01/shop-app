@@ -32,6 +32,9 @@ namespace shopapp.webui.Identity
                 var role = user.GetValue<string>("role");
                 var firstName = user.GetValue<string>("firstName");
                 var lastName = user.GetValue<string>("lastName");
+                var City = user.GetValue<string>("City");
+                var Country = user.GetValue<string>("Country");
+                var ZipCode = user.GetValue<string>("ZipCode");
 
                 if (await userManager.FindByNameAsync(username) == null)
                 {
@@ -41,6 +44,9 @@ namespace shopapp.webui.Identity
                         Email = email,
                         FirstName = firstName,
                         LastName = lastName,
+                        City = City,
+                        Country = Country,
+                        ZipCode = ZipCode,
                         EmailConfirmed = true
                     };
                     var result = await userManager.CreateAsync(newUser, password);

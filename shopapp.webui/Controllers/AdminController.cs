@@ -67,9 +67,20 @@ namespace shopapp.webui.Controllers
                         await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles).ToArray<string>());
                         await _userManager.RemoveFromRolesAsync(user, userRoles.Except(selectedRoles).ToArray<string>());
 
+                        TempData.Put("message", new AlertMessage() {
+                            Title = "User Updated.",
+                            Message = $"{user.UserName} was updated successfully.",
+                            AlertType = "success"
+                        });
+
                         return Redirect("~/admin/user/list");
                     }
                 }
+                TempData.Put("message", new AlertMessage() {
+                    Title = "User not Updated.",
+                    Message = "User could not be updated.",
+                    AlertType = "danger"
+                });
                 return Redirect("~/admin/user/list");
             }
             return View(model);
@@ -77,6 +88,30 @@ namespace shopapp.webui.Controllers
 
         public IActionResult UserList() {
             return View(_userManager.Users);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UserDelete(string userId) {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user != null) {
+                var result = await _userManager.DeleteAsync(user);
+                if (result.Succeeded) {
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "User Deleted.",
+                        Message = $"{user.UserName} was deleted successfully.",
+                        AlertType = "success"
+                    });
+                    return RedirectToAction("UserList");
+                }
+                foreach (var error in result.Errors) {
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "User cannot Deleted.",
+                        Message = error.Description,
+                        AlertType = "danger"
+                    });
+                }
+            }
+            return RedirectToAction("UserList");
         }
 
         public async Task<IActionResult> RoleEdit(string id) {
@@ -108,8 +143,18 @@ namespace shopapp.webui.Controllers
                         var result = await _userManager.AddToRoleAsync(user, model.RoleName);
                         if(!result.Succeeded) {
                             foreach (var error in result.Errors) {
-                                ModelState.AddModelError("", error.Description);
+                                TempData.Put("message", new AlertMessage() {
+                                    Title = "Role cannot Updated.",
+                                    Message = error.Description,
+                                    AlertType = "danger"
+                                });
                             }
+                        } else {
+                            TempData.Put("message", new AlertMessage() {
+                                Title = "Role Updated.",
+                                Message = "Role updated successfully.",
+                                AlertType = "success"
+                            });
                         }
                     }
                 }
@@ -121,13 +166,21 @@ namespace shopapp.webui.Controllers
                         var result = await _userManager.RemoveFromRoleAsync(user, model.RoleName);
                         if(!result.Succeeded) {
                             foreach (var error in result.Errors) {
-                                ModelState.AddModelError("", error.Description);
+                                TempData.Put("message", new AlertMessage() {
+                                    Title = "Role cannot Updated.",
+                                    Message = error.Description,
+                                    AlertType = "danger"
+                                });
                             }
-                        
+                        } else {
+                            TempData.Put("message", new AlertMessage() {
+                                Title = "Role Updated.",
+                                Message = "Role updated successfully.",
+                                AlertType = "success"
+                            });
                         }
                     }
                 }
-
             }
             
             return Redirect("/admin/role/" + model.RoleId);
@@ -146,10 +199,19 @@ namespace shopapp.webui.Controllers
             if(ModelState.IsValid) {
                 var result = await _roleManager.CreateAsync(new IdentityRole(model.Name));
                 if(result.Succeeded) {
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Role Created.",
+                        Message = $"{model.Name} role created successfully.",
+                        AlertType = "success"
+                    });
                     return RedirectToAction("RoleList");
                 } else {
                     foreach (var error in result.Errors) {
-                        ModelState.AddModelError("", error.Description);
+                        TempData.Put("message", new AlertMessage() {
+                            Title = "Role not Created.",
+                            Message = error.Description,
+                            AlertType = "danger"
+                        });   
                     }
                 }
             }
@@ -162,10 +224,19 @@ namespace shopapp.webui.Controllers
             if(role != null) {
                 var result = await _roleManager.DeleteAsync(role);
                 if(result.Succeeded) {
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Role Deleted.",
+                        Message = $"{role.Name} role deleted successfully.",
+                        AlertType = "success"
+                    });
                     return RedirectToAction("RoleList");
                 } else {
                     foreach (var error in result.Errors) {
-                        ModelState.AddModelError("", error.Description);
+                        TempData.Put("message", new AlertMessage() {
+                            Title = "Role cannot Deleted.",
+                            Message = error.Description,
+                            AlertType = "danger"
+                        });
                     }
                 }
             }

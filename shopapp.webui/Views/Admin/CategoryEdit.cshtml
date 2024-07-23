@@ -1,12 +1,11 @@
 @model CategoryModel
 
-<h1 class="h3">Edit Category</h1>
+<h1 class="h3 mt-3">Edit Category</h1>
 <hr>
 
 <div class="row">
     <div class="col-md-4">
         <form action="/admin/categoryedit" method="POST">
-            <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="CategoryId" value="@Model.CategoryId">
             <div class="form-group row">
                 <label asp-for="Name" class="col-sm-2 col-form-label"></label>

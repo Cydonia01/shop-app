@@ -24,6 +24,9 @@ namespace shopapp.data.Concrete
             var orders = ShopContext.Orders
                 .Include(i => i.OrderItems)
                 .ThenInclude(i => i.Product)
+                .Include(i => i.ShippingAddress)
+                .Include(i => i.BillingAddress)
+                .Include(i => i.Card)
                 .AsQueryable();
 
             if(!string.IsNullOrEmpty(userId)) {

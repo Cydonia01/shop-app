@@ -137,20 +137,22 @@ namespace shopapp.webui.Controllers
         public IActionResult GetOrders() {
             var userId = _userManager.GetUserId(User);
             var orders = _orderService.GetOrders(userId);
+
             var orderListModel = new List<OrderListModel>();
             OrderListModel orderModel;
+
             foreach (var order in orders) {
                 orderModel = new OrderListModel
                 {
                     OrderId = order.OrderId,
                     OrderNumber = order.OrderNumber,
                     OrderDate = order.OrderDate,
-                    Phone = order.Phone,
-                    Email = order.Email,
                     FirstName = order.FirstName,
                     LastName = order.LastName,
-                    Address = order.ShippingAddress.Address,
-                    City = order.ShippingAddress.City,
+                    Phone = order.Phone,
+                    Email = order.Email,
+                    Address = order.ShippingAddress.Address + " " + order.ShippingAddress.City + "/" + order.ShippingAddress.Country,
+                    Note = order.Note,
                     PaymentType = order.PaymentType,
                     OrderState = order.OrderState,
 
@@ -280,9 +282,9 @@ namespace shopapp.webui.Controllers
                 RegistrationDate = "2013-04-21 15:12:09",
                 RegistrationAddress = "Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1",
                 Ip = "85.34.78.112",
-                City = model.ShipModel.City,
-                Country = model.ShipModel.Country,
-                ZipCode = model.ShipModel.ZipCode
+                City = user.City,
+                Country = user.Country,
+                ZipCode = user.ZipCode
             };
             request.Buyer = buyer;
 
