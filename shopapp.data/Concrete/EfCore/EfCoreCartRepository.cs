@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using shopapp.data.Abstract;
 using shopapp.data.Concrete.EfCore;
@@ -11,10 +8,7 @@ namespace shopapp.data.Concrete
 {
     public class EfCoreCartRepository : EfCoreGenericRepository<Cart>, ICartRepository
     {
-        public EfCoreCartRepository(ShopContext context) : base(context)
-        {
-            
-        }
+        public EfCoreCartRepository(ShopContext context) : base(context){}
 
         private ShopContext ShopContext {
             get { return context as ShopContext; }

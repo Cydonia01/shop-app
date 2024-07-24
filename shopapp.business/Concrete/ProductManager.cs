@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using shopapp.entity;
 using shopapp.business.Abstract;
 using shopapp.data.Abstract;
-using System.ComponentModel.DataAnnotations;
-using System;
 
 namespace shopapp.business.Concrete
 {

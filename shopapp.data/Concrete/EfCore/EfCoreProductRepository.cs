@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -9,10 +8,7 @@ namespace shopapp.data.Concrete.EfCore
 {
     public class EfCoreProductRepository : EfCoreGenericRepository<Product>, IProductRepository
     {
-        public EfCoreProductRepository(ShopContext context): base(context)
-        {
-            
-        }
+        public EfCoreProductRepository(ShopContext context): base(context) {}
 
         private ShopContext ShopContext {
             get { return context as ShopContext; }

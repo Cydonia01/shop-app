@@ -1,0 +1,67 @@
+@model ProfileModel
+
+<div class="row mt-3">
+    <div class="col-md-3">
+        @await Html.PartialAsync("_settings")
+    </div>
+    <div class="col-md-9">
+        <h3>Personal Info</h3>
+        <hr class="mb-3">
+        <form asp-controller="account" asp-action="profile" method="POST">
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <label asp-for="FirstName" class="col-form-label"></label>
+                    <div>
+                        <input asp-for="FirstName" class="form-control">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="LastName" class="col-form-label"></label>
+                    <div>
+                        <input asp-for="LastName" class="form-control">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <label asp-for="UserName" class="col-form-label"></label>
+                    <div>
+                        <input asp-for="UserName" class="form-control">
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Email" class="col-form-label"></label>
+                    <div>
+                        <input asp-for="Email" class="form-control">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label asp-for="City" class="col-form-label"></label>
+                    <div>
+                        <input asp-for="City" class="form-control">
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Country" class="col-form-label"></label>
+                    <div>
+                        <input asp-for="Country" class="form-control">
+                        <span asp-validation-for="Country" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="/modules/jquery-validation/dist/jquery.validate.min.js"/></script>
+    <script src="/modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"/></script>
+}

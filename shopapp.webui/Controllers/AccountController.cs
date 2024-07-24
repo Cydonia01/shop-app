@@ -1,8 +1,11 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using shopapp.business.Abstract;
 using shopapp.webui.EmailServices;
 using shopapp.webui.Extensions;
@@ -99,7 +102,7 @@ namespace shopapp.webui.Controllers
                 });
 
                 // email
-                // await _emailSender.SendEmailAsync(model.Email, "Confirm your email", $"Click <a href='https://localhost:5001{url}'>here</a> to confirm your email.");
+                await _emailSender.SendEmailAsync(model.Email, "Confirm your email", $"Click <a href='https://localhost:5001{url}'>here</a> to confirm your email.");
                 TempData.Put("message", new AlertMessage() {
                     Title = "Confirm Email.",
                     Message = "A confirmation link has been sent to your email. Please go to your email and confirm your email.",
@@ -235,6 +238,114 @@ namespace shopapp.webui.Controllers
         public IActionResult AccessDenied() {
             return View();
         }
-    }
 
+        public async Task<IActionResult> Profile() {
+            var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+            var model = new ProfileModel() {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserName = user.UserName,
+                Email = user.Email,
+                City = user.City,
+                Country = user.Country,
+            };
+            ViewBag.SelectedPage = "Profile";
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Profile(ProfileModel model) {
+            ViewBag.SelectedPage = "Profile";
+            if (!ModelState.IsValid) {
+                return View();
+            }
+            System.Console.WriteLine(User.Identity.Name);
+            var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+            if (user != null) {
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.UserName = model.UserName;
+                user.Email = model.Email;
+                user.City = model.City;
+                user.Country = model.Country;
+                var result = await _userManager.UpdateAsync(user);
+
+                if (result.Succeeded) {
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Profile Updated.",
+                        Message = "Your profile has been updated successfully.",
+                        AlertType = "success"
+                    });
+                    return RedirectToAction("Profile");
+                } else {
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Profile Error.",
+                        Message = "Your profile could not be updated.",
+                        AlertType = "danger"
+                    });
+                    return View(model);
+                }
+            }
+            return View(model);
+        }
+
+        public IActionResult ChangePassword() {
+            ViewBag.SelectedPage = "ChangePassword";
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(PasswordModel model) {
+            ViewBag.SelectedPage = "ChangePassword";
+            if (ModelState.IsValid) {
+                if (model.CurrentPassword == model.NewPassword) {
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Password Error.",
+                        Message = "New password cannot be the same as the current password.",
+                        AlertType = "danger"
+                    });
+                    return View();
+                }
+                var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+                if (user != null) {
+                    var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                    if (result.Succeeded) {
+                        await _signInManager.SignOutAsync();
+                        TempData.Put("message", new AlertMessage() {
+                            Title = "Password Changed.",
+                            Message = "Your password has been changed successfully. Please login with your new password.",
+                            AlertType = "success"
+                        });
+                        return RedirectToAction("Login");
+                    } else {
+                        if (result.Errors.ToArray()[0].Code == "PasswordMismatch") {
+                            TempData.Put("message", new AlertMessage() {
+                                Title = "Password Error.",
+                                Message = "Your current password is incorrect.",
+                                AlertType = "danger"
+                            });
+                        }
+                        else if (result.Errors.Count() > 0) {
+                            var PasswordError = @"
+                                <p>Password must be at least 6 characters long and must contain at least</p>
+                                <ul>
+                                    <li>one uppercase letter</li>
+                                    <li>one lowercase letter</li>
+                                    <li>one digit</li>
+                                    <li>one special character</li>
+                                </ul>
+                            ";
+                            TempData.Put("message", new AlertMessage() {
+                                Title = "Password Error",
+                                Message = PasswordError,
+                                AlertType = "danger"
+                            });
+                        }
+                        return View(model);
+                    }
+                }
+            }
+            return View();
+        }
+    }
 }

@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,7 +15,7 @@ namespace shopapp.webui.Extensions
                     try {
                         applicationContext.Database.Migrate();
                     }
-                    catch (System.Exception ex) {
+                    catch (Exception ex) {
                         Console.WriteLine(ex.Message);
                     }
                 }
@@ -27,7 +24,7 @@ namespace shopapp.webui.Extensions
                     try {
                         shopContext.Database.Migrate();
                     }
-                    catch (System.Exception ex) {
+                    catch (Exception ex) {
                         Console.WriteLine(ex.Message);
                     }
                 }

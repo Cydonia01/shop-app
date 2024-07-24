@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using shopapp.business.Abstract;
 using shopapp.data.Abstract;
 using shopapp.entity;

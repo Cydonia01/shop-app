@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
 using Iyzipay;
 using Iyzipay.Model;
 using Iyzipay.Request;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using shopapp.business.Abstract;
 using shopapp.entity;
 using shopapp.webui.Extensions;
@@ -236,8 +232,8 @@ namespace shopapp.webui.Controllers
         {
             Options options = new Options
             {
-                ApiKey = "",
-                SecretKey = "",
+                ApiKey = "<your api key>",
+                SecretKey = "<your secret key>",
                 BaseUrl = "https://sandbox-api.iyzipay.com"
             };
 
