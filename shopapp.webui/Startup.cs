@@ -46,6 +46,7 @@ namespace shopapp.webui
                 options.Password.RequireNonAlphanumeric = true;
                 options.Password.RequiredLength = 6;
                 
+                
                 // Lockout
                 options.Lockout.MaxFailedAccessAttempts = 3;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);

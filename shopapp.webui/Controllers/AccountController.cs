@@ -111,20 +111,7 @@ namespace shopapp.webui.Controllers
 
                 return RedirectToAction("Login", "Account");
             }
-            var PasswordError = @"
-                                    <p>Password must be at least 6 characters long and must contain at least</p>
-                                    <ul>
-                                        <li>one uppercase letter</li>
-                                        <li>one lowercase letter</li>
-                                        <li>one digit</li>
-                                        <li>one special character</li>
-                                    </ul>
-                                ";
-            TempData.Put("message", new AlertMessage() {
-                Title = "Password Error",
-                Message = PasswordError,
-                AlertType = "danger"
-            });
+            PasswordError();
             return View(model);
         }
         public async Task<IActionResult> Logout() {
@@ -160,9 +147,10 @@ namespace shopapp.webui.Controllers
                 userId = user.Id,
                 token = code
             });
+            System.Console.WriteLine(url);
 
             // email
-            await _emailSender.SendEmailAsync(Email, "Reset Password", $"Click <a href='https://localhost:5001{url}'>here</a> to reset your password.");
+            // await _emailSender.SendEmailAsync(Email, "Reset Password", $"Click <a href='https://localhost:5001{url}'>here</a> to reset your password.");
             
             TempData.Put("message", new AlertMessage() {
                 Title = "Reset Password.",
@@ -175,11 +163,8 @@ namespace shopapp.webui.Controllers
 
         public IActionResult ResetPassword(string userId, string token) {
             if(userId == null || token == null) {
-                return RedirectToAction("Home", "Index");
+                return RedirectToAction("Index", "Home");
             }
-            var model = new ResetPasswordModel() {
-                Token = token
-            };
             return View();
         }
 
@@ -188,7 +173,7 @@ namespace shopapp.webui.Controllers
             if (!ModelState.IsValid) {
                 return View(model);
             }
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByIdAsync(model.UserId);
             if(user == null) {
                 return RedirectToAction("Index", "Home");
             }
@@ -200,6 +185,8 @@ namespace shopapp.webui.Controllers
                     AlertType = "success"
                 });
                 return RedirectToAction("Login", "Account");
+            } else if (result.Errors.Count() > 0) {
+                PasswordError();
             }
             return View(model);
         }
@@ -298,17 +285,26 @@ namespace shopapp.webui.Controllers
         public async Task<IActionResult> ChangePassword(PasswordModel model) {
             ViewBag.SelectedPage = "ChangePassword";
             if (ModelState.IsValid) {
-                if (model.CurrentPassword == model.NewPassword) {
-                    TempData.Put("message", new AlertMessage() {
-                        Title = "Password Error.",
-                        Message = "New password cannot be the same as the current password.",
-                        AlertType = "danger"
-                    });
-                    return View();
-                }
                 var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
                 if (user != null) {
                     var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                    if (!await _userManager.CheckPasswordAsync(user, model.CurrentPassword)) {
+                        TempData.Put("message", new AlertMessage() {
+                            Title = "Password Error.",
+                            Message = "Your current password is incorrect.",
+                            AlertType = "danger"
+                        });
+                        return View();
+                    }
+                    if (await _userManager.CheckPasswordAsync(user, model.NewPassword)) {
+                        TempData.Put("message", new AlertMessage() {
+                            Title = "Password Error.",
+                            Message = "New password cannot be the same as the current password.",
+                            AlertType = "danger"
+                        });
+                        return View();
+                    }
+                    
                     if (result.Succeeded) {
                         await _signInManager.SignOutAsync();
                         TempData.Put("message", new AlertMessage() {
@@ -317,35 +313,32 @@ namespace shopapp.webui.Controllers
                             AlertType = "success"
                         });
                         return RedirectToAction("Login");
-                    } else {
-                        if (result.Errors.ToArray()[0].Code == "PasswordMismatch") {
-                            TempData.Put("message", new AlertMessage() {
-                                Title = "Password Error.",
-                                Message = "Your current password is incorrect.",
-                                AlertType = "danger"
-                            });
-                        }
-                        else if (result.Errors.Count() > 0) {
-                            var PasswordError = @"
-                                <p>Password must be at least 6 characters long and must contain at least</p>
-                                <ul>
-                                    <li>one uppercase letter</li>
-                                    <li>one lowercase letter</li>
-                                    <li>one digit</li>
-                                    <li>one special character</li>
-                                </ul>
-                            ";
-                            TempData.Put("message", new AlertMessage() {
-                                Title = "Password Error",
-                                Message = PasswordError,
-                                AlertType = "danger"
-                            });
-                        }
-                        return View(model);
                     }
+                    
+                    else if (result.Errors.Count() > 0) {
+                        PasswordError();
+                    }
+                    return View(model);
                 }
             }
             return View();
+        }
+    
+        public void PasswordError() {
+            var PasswordError = @"
+                <p>Password must be at least 6 characters long and must contain at least</p>
+                <ul>
+                    <li>one uppercase letter</li>
+                    <li>one lowercase letter</li>
+                    <li>one digit</li>
+                    <li>one special character</li>
+                </ul>
+            ";
+            TempData.Put("message", new AlertMessage() {
+                Title = "Password Error",
+                Message = PasswordError,
+                AlertType = "danger"
+            });
         }
     }
 }

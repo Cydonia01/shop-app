@@ -5,12 +5,20 @@ namespace shopapp.webui.Models
     public class ResetPasswordModel
     {
         [Required]
-        public string Token { get; set; }
+        public string UserId { get; set; }
+
         [Required]
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+        public string Token { get; set; }
+
         [Required]
         [DataType(DataType.Password)]
+        [Display(Name = "New Password")]
         public string Password { get; set; }
+        
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm Password")]
+        [Compare("Password", ErrorMessage = "Password and Confirm Password must match.")]
+        public string ConfirmPassword { get; set; }
     }
 }
