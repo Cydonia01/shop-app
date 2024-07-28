@@ -1,3 +1,7 @@
+/*
+* This class is used to manage the order operations.
+* It implements the IOrderService interface.
+*/
 using System.Collections.Generic;
 using shopapp.business.Abstract;
 using shopapp.data.Abstract;

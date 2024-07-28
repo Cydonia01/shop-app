@@ -1,3 +1,6 @@
+/*
+* IProductRepository.cs is created to define the methods that will be used in the ProductRepository class.
+*/
 using System.Collections.Generic;
 using shopapp.entity;
 

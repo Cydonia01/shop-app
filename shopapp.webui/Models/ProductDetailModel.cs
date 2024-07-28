@@ -1,3 +1,5 @@
+// Purpose: Model for Product Detail Page.
+
 using System.Collections.Generic;
 using shopapp.entity;
 

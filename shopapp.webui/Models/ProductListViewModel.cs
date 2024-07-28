@@ -1,3 +1,5 @@
+// Purpose: Contains the ProductListViewModel class which is used to display the products in the view.
+
 using System;
 using System.Collections.Generic;
 using shopapp.entity;

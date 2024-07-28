@@ -1,3 +1,8 @@
+/*
+* AdminController.cs file defines the AdminController class.
+* The AdminController class is responsible for handling the admin operations such as creating, updating, and deleting products and categories.
+* It is also responsible for handling the user and role operations such as creating, updating, and deleting users and roles.
+*/
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,13 +20,19 @@ using shopapp.webui.Models;
 
 namespace shopapp.webui.Controllers
 {
+    // Only users with admin role can access this controller
     [Authorize(Roles = "admin")]
     public class AdminController: Controller
     {
-        private IProductService _productService;
-        private ICategoryService _categoryService;
-        private RoleManager<IdentityRole> _roleManager;
-        private UserManager<User> _userManager;
+        // Dependency Injection
+        // Defines the managers and services that will be used in the controller
+
+        private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<User> _userManager;
+
+        // Constructor: Initializes the AccountController class with the UserManager, SignInManager, EmailSender, and CartService parameters.
         public AdminController(IProductService productService, ICategoryService categoryService, RoleManager<IdentityRole> roleManager, UserManager<User> userManager) {
             _productService = productService;
             _categoryService = categoryService;
@@ -30,7 +41,9 @@ namespace shopapp.webui.Controllers
         }
 
         public async Task<IActionResult> UserEdit(string id) {
+            // Find the user by id
             var user = await _userManager.FindByIdAsync(id);
+            // If the user is found, return the user details view
             if (user != null) {
                 var SelectedRoles = await _userManager.GetRolesAsync(user);
                 var roles = _roleManager.Roles.Select(i => i.Name);
@@ -48,21 +61,26 @@ namespace shopapp.webui.Controllers
             return Redirect("~/admin/user/list");
         }
 
+        // UserEdit method is called when the user details are updated
         [HttpPost]
         public async Task<IActionResult> UserEdit(UserDetailsModel model, string[] selectedRoles) {
             if (ModelState.IsValid) {
                 var user = await _userManager.FindByIdAsync(model.UserId);
                 if (user != null) {
+                    // Update the user details
                     user.UserName = model.UserName;
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
                     user.Email = model.Email;
                     user.EmailConfirmed = model.EmailConfirmed;
 
+                    // Update the user details in the database
                     var result = await _userManager.UpdateAsync(user);
+                    // If the user details are updated successfully, add the user to the selected roles and remove the user from the unselected roles
                     if (result.Succeeded) {
                         var userRoles = await _userManager.GetRolesAsync(user);
-                        selectedRoles = selectedRoles ?? new string[]{};
+                        selectedRoles ??= new string[]{}; // If selectedRoles is null, set it to an empty array
+                        
                         await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles).ToArray<string>());
                         await _userManager.RemoveFromRolesAsync(user, userRoles.Except(selectedRoles).ToArray<string>());
 
@@ -75,6 +93,7 @@ namespace shopapp.webui.Controllers
                         return Redirect("~/admin/user/list");
                     }
                 }
+                // If the user details are not updated successfully, display an error message
                 TempData.Put("message", new AlertMessage() {
                     Title = "User not Updated.",
                     Message = "User could not be updated.",
@@ -119,11 +138,13 @@ namespace shopapp.webui.Controllers
             var members = new List<User>();
             var nonmembers = new List<User>();
 
+            // If the role is found, add the users to the members and nonmembers lists
             foreach (var user in _userManager.Users.ToList()) {
                 var list = await _userManager.IsInRoleAsync(user, role.Name) ? members : nonmembers;
                 list.Add(user);
             }
 
+            // Create a new RoleDetails object with the role, members, and nonmembers lists
             var model = new RoleDetails() {
                 Role = role,
                 Members = members,
@@ -135,49 +156,48 @@ namespace shopapp.webui.Controllers
 
         [HttpPost]
         public async Task<IActionResult> RoleEdit(RoleEditModel model) {
-            if(ModelState.IsValid) {
-                foreach (var userId in model.IdsToAdd ?? new string[]{}) {
-                    var user = await _userManager.FindByIdAsync(userId);
-                    if(user != null) {
-                        var result = await _userManager.AddToRoleAsync(user, model.RoleName);
-                        if(!result.Succeeded) {
-                            foreach (var error in result.Errors) {
-                                TempData.Put("message", new AlertMessage() {
-                                    Title = "Role cannot Updated.",
-                                    Message = error.Description,
-                                    AlertType = "danger"
-                                });
-                            }
-                        } else {
+            // For each user in the IdsToAdd list, add the user to the role
+            foreach (var userId in model.IdsToAdd ?? new string[]{}) {
+                var user = await _userManager.FindByIdAsync(userId);
+                if(user != null) {
+                    var result = await _userManager.AddToRoleAsync(user, model.RoleName);
+                    if(!result.Succeeded) {
+                        foreach (var error in result.Errors) {
                             TempData.Put("message", new AlertMessage() {
-                                Title = "Role Updated.",
-                                Message = "Role updated successfully.",
-                                AlertType = "success"
+                                Title = "Role cannot Updated.",
+                                Message = error.Description,
+                                AlertType = "danger"
                             });
                         }
+                    } else {
+                        TempData.Put("message", new AlertMessage() {
+                            Title = "Role Updated.",
+                            Message = "Role updated successfully.",
+                            AlertType = "success"
+                        });
                     }
                 }
+            }
 
-                foreach (var userId in model.IdsToDelete ?? new string[]{}) {
-                    var user = await _userManager.FindByIdAsync(userId);
-                    if(user != null) {
-
-                        var result = await _userManager.RemoveFromRoleAsync(user, model.RoleName);
-                        if(!result.Succeeded) {
-                            foreach (var error in result.Errors) {
-                                TempData.Put("message", new AlertMessage() {
-                                    Title = "Role cannot Updated.",
-                                    Message = error.Description,
-                                    AlertType = "danger"
-                                });
-                            }
-                        } else {
+            // For each user in the IdsToDelete list, remove the user from the role
+            foreach (var userId in model.IdsToDelete ?? new string[]{}) {
+                var user = await _userManager.FindByIdAsync(userId);
+                if(user != null) {
+                    var result = await _userManager.RemoveFromRoleAsync(user, model.RoleName);
+                    if(!result.Succeeded) {
+                        foreach (var error in result.Errors) {
                             TempData.Put("message", new AlertMessage() {
-                                Title = "Role Updated.",
-                                Message = "Role updated successfully.",
-                                AlertType = "success"
+                                Title = "Role cannot Updated.",
+                                Message = error.Description,
+                                AlertType = "danger"
                             });
                         }
+                    } else {
+                        TempData.Put("message", new AlertMessage() {
+                            Title = "Role Updated.",
+                            Message = "Role updated successfully.",
+                            AlertType = "success"
+                        });
                     }
                 }
             }
@@ -197,6 +217,7 @@ namespace shopapp.webui.Controllers
         public async Task<IActionResult> RoleCreate(RoleModel model) {
             if(ModelState.IsValid) {
                 var result = await _roleManager.CreateAsync(new IdentityRole(model.Name));
+                // If the role is created successfully, display a success message
                 if(result.Succeeded) {
                     TempData.Put("message", new AlertMessage() {
                         Title = "Role Created.",
@@ -222,6 +243,7 @@ namespace shopapp.webui.Controllers
             var role = await _roleManager.FindByIdAsync(roleId);
             if(role != null) {
                 var result = await _roleManager.DeleteAsync(role);
+                // If the role is deleted successfully, display a success message
                 if(result.Succeeded) {
                     TempData.Put("message", new AlertMessage() {
                         Title = "Role Deleted.",
@@ -255,6 +277,7 @@ namespace shopapp.webui.Controllers
         [HttpPost]
         public IActionResult ProductCreate(ProductModel model) {
             if (ModelState.IsValid) {
+                // Create a new Product object with the details from the model
                 var entity = new Product() {
                     Name = model.Name,
                     Url = model.Url,
@@ -263,6 +286,7 @@ namespace shopapp.webui.Controllers
                     ImageUrl = model.ImageUrl
                 };
 
+                // If the product is created successfully, display a success message
                 if(_productService.Create(entity)) {
                     TempData.Put("message", new AlertMessage() {
                         Title = "Product Created.",
@@ -271,6 +295,7 @@ namespace shopapp.webui.Controllers
                     });                    
                     return RedirectToAction("ProductList");
                 }
+                // If the product is not created successfully, display an error message
                 TempData.Put("message", new AlertMessage() {
                     Title = "Product not Created.",
                     Message = _productService.ErrorMessage,
@@ -291,6 +316,7 @@ namespace shopapp.webui.Controllers
                 return NotFound();
             }
             
+            // Create a new ProductModel object with the details from the entity
             var model = new ProductModel() {
                 ProductId = entity.ProductId,
                 Name = entity.Name,
@@ -303,6 +329,7 @@ namespace shopapp.webui.Controllers
                 SelectedCategories = entity.ProductCategories.Select(i=>i.Category).ToList()
             };
 
+            // Get all the categories and add them to the ViewBag
             ViewBag.Categories = _categoryService.GetAll();
 
             return View(model);
@@ -311,12 +338,14 @@ namespace shopapp.webui.Controllers
         [HttpPost]
         public async Task<IActionResult> ProductEdit(ProductModel model, int[] categoryIds, IFormFile file) {
             if(ModelState.IsValid) {
+                // Find the product by id
                 var entity = _productService.GetById(model.ProductId);
                 
                 if (entity == null) {
                     return NotFound();
                 }
 
+                // Update the product details
                 entity.Name = model.Name;
                 entity.Url = model.Url;
                 entity.Price = model.Price;
@@ -324,17 +353,20 @@ namespace shopapp.webui.Controllers
                 entity.IsApproved = model.IsApproved;
                 entity.IsHome = model.IsHome;
 
+                // If a new image is uploaded, save the image to the wwwroot/img folder
                 if(file != null) {
                     var extension = Path.GetExtension(file.FileName);
                     var randomName = string.Format($"{Guid.NewGuid()}{extension}");
                     entity.ImageUrl = randomName;
                     var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img", randomName);
                     
+                    // Using statement to ensure the file stream is closed after the file is saved
                     using(var stream = new FileStream(path, FileMode.Create)) {
-                        await file.CopyToAsync(stream);
+                        await file.CopyToAsync(stream); // Save the file to the path
                     }
                 }
 
+                // Update the product in the database
                 if(_productService.Update(entity, categoryIds)) {
                     TempData.Put("message", new AlertMessage() {
                         Title = "Product Updated.",
@@ -356,9 +388,11 @@ namespace shopapp.webui.Controllers
 
         public IActionResult DeleteProduct(int productId) {
             var entity = _productService.GetById(productId);
+
             if (entity != null) {
                 _productService.Delete(entity);
             }
+
             TempData.Put("message", new AlertMessage() {
                 Title = "Product Deleted.",
                 Message = $"{entity.Name} was deleted successfully.",
@@ -382,11 +416,13 @@ namespace shopapp.webui.Controllers
         [HttpPost]
         public IActionResult CategoryCreate(CategoryModel model) {
             if(ModelState.IsValid) {
+                // Create a new Category object with the details from the model
                 var entity = new Category() {
                     Name = model.Name,
                     Url = model.Url,
                 };
 
+                // If the category is created successfully, display a success message
                 if (_categoryService.Create(entity)) {
                     TempData.Put("message", new AlertMessage() {
                         Title = "Category Created.",
@@ -410,12 +446,14 @@ namespace shopapp.webui.Controllers
                 return NotFound();
             }
 
+            // Find the category by id
             var entity = _categoryService.GetByIdWithProducts((int)id);
             
             if (entity == null) {
                 return NotFound();
             }
             
+            // Create a new CategoryModel object with the details from the entity
             var model = new CategoryModel() {
                 CategoryId = entity.CategoryId,
                 Name = entity.Name,
@@ -430,15 +468,18 @@ namespace shopapp.webui.Controllers
         [HttpPost]
         public IActionResult CategoryEdit(CategoryModel model) {
             if(ModelState.IsValid) {
+                // Find the category by id
                 var entity = _categoryService.GetById(model.CategoryId);
                 
                 if (entity == null) {
                     return NotFound();
                 }
 
+                // Update the category details
                 entity.Name = model.Name;
                 entity.Url = model.Url;
 
+                // If the category is updated successfully, display a success message
                 if(_categoryService.Update(entity)) {
                     TempData.Put("message", new AlertMessage() {
                         Title = "Category Updated.",
@@ -458,6 +499,7 @@ namespace shopapp.webui.Controllers
 
         public IActionResult DeleteCategory(int CategoryId) {
             var entity = _categoryService.GetById(CategoryId);
+            // If the category is found, delete the category
             if (entity != null) {
                 _categoryService.Delete(entity);
             }
@@ -471,6 +513,7 @@ namespace shopapp.webui.Controllers
             return RedirectToAction("CategoryList");
         }
     
+        // Delete products from a category
         [HttpPost]
         public IActionResult DeleteFromCategory(int productId, int categoryId) {
             _categoryService.DeleteFromCategory(productId, categoryId);

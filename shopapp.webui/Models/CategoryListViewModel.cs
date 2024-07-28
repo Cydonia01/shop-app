@@ -1,3 +1,5 @@
+// Purpose: Contains the CategoryListViewModel class which is used to display the list of categories in the view.
+
 using System.Collections.Generic;
 using shopapp.entity;
 

@@ -1,3 +1,4 @@
+// Purpose: Model for alert messages.
 namespace shopapp.webui.Models
 {
     public class AlertMessage

@@ -1,3 +1,4 @@
+// Purpose: Model for Reset Password page.
 using System.ComponentModel.DataAnnotations;
 
 namespace shopapp.webui.Models

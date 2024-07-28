@@ -1,3 +1,5 @@
+// Model for Role page. It also includes RoleDetails and RoleEditModel classes which are used to display the details of a role and edit the role respectively.
+
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;

@@ -1,3 +1,7 @@
+/* 
+* Cart Service Interface for Cart Operations
+*/
+
 using shopapp.entity;
 
 namespace shopapp.business.Abstract

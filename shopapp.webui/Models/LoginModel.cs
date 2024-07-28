@@ -1,3 +1,5 @@
+// Purpose: Model for login page.
+
 using System.ComponentModel.DataAnnotations;
 
 namespace shopapp.webui.Models

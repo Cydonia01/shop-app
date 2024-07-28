@@ -1,3 +1,7 @@
+/*
+* This file includes the interface of the product service.
+* The interface includes the methods that are used in the product service.
+*/
 using System.Collections.Generic;
 using shopapp.entity;
 

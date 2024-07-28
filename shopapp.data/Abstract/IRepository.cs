@@ -1,3 +1,6 @@
+/*
+* IRepository.cs defines the interface for the repository pattern.
+*/
 using System.Collections.Generic;
 
 namespace shopapp.data.Abstract

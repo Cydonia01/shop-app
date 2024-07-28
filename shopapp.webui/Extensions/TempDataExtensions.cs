@@ -1,3 +1,5 @@
+// Purpose: Contains extension methods for ITempDataDictionary to store and retrieve complex objects in TempData.
+
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
 

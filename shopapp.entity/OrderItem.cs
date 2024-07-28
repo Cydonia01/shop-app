@@ -1,3 +1,6 @@
+/*
+* This class is used to create an order item object.
+*/
 namespace shopapp.entity
 {
     public class OrderItem

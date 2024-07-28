@@ -1,11 +1,11 @@
+/*
+* AccountController.cs handles the user account operations.
+* This file includes the methods for login, register, logout, forgot password, reset password, confirm email, profile, change password.
+*/
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using shopapp.business.Abstract;
 using shopapp.webui.EmailServices;
 using shopapp.webui.Extensions;
@@ -14,14 +14,17 @@ using shopapp.webui.Models;
 
 namespace shopapp.webui.Controllers
 {
-    [AutoValidateAntiforgeryToken]
+    [AutoValidateAntiforgeryToken] // Prevents Cross-Site Request Forgery (CSRF) attacks
     public class AccountController: Controller
     {
-        private UserManager<User> _userManager;
-        private SignInManager<User> _signInManager;
-        private IEmailSender _emailSender;
-        private ICartService _cartService;
+        // Dependency Injection
+        // Defines the managers and services that will be used in the controller
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IEmailSender _emailSender;
+        private readonly ICartService _cartService;
 
+        // Constructor: Initializes the AccountController class with the UserManager, SignInManager, EmailSender, and CartService parameters.
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender, ICartService cartService) {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -29,11 +32,11 @@ namespace shopapp.webui.Controllers
             _cartService = cartService;
         }
 
-        public IActionResult Login(string ReturnUrl=null) {
+        [HttpGet]
+        public IActionResult Login(string ReturnUrl = null) {
             return View(new LoginModel() {
-                    ReturnUrl = ReturnUrl
-                }
-            );
+                ReturnUrl = ReturnUrl
+            });
         }
 
         [HttpPost]
@@ -42,6 +45,7 @@ namespace shopapp.webui.Controllers
                 return View(model);
             }
             
+            // Find the user by email
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             if(user == null) {
@@ -54,6 +58,7 @@ namespace shopapp.webui.Controllers
                 return View(model);
             }
 
+            // Sign in the user
             var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
             if(result.Succeeded) {
                 return Redirect(model.ReturnUrl??"~/");
@@ -74,6 +79,7 @@ namespace shopapp.webui.Controllers
                 return View();
             }
 
+            // Check if the email is already registered
             if (_userManager.FindByEmailAsync(model.Email).Result != null) {
                 TempData.Put("message", new AlertMessage() {
                     Title = "Email Error.",
@@ -82,7 +88,17 @@ namespace shopapp.webui.Controllers
                 });
                 return View();
             }
+            // Check if the username is already registered
+            if (_userManager.FindByNameAsync(model.UserName).Result != null) {
+                TempData.Put("message", new AlertMessage() {
+                    Title = "Username Error.",
+                    Message = "This username is already registered.",
+                    AlertType = "danger"
+                });
+                return View();
+            }
 
+            // Create a new user
             var user = new User() {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -92,17 +108,23 @@ namespace shopapp.webui.Controllers
                 Country = model.Country,
                 ZipCode = model.ZipCode
             };
+
+            // Register the user
             var result = await _userManager.CreateAsync(user, model.Password);
+
+            // If the user is registered successfully, generate a token and send an email to the user
             if(result.Succeeded) {
-                // generate token
+                // Generate token
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var url = Url.Action("ConfirmEmail", "Account", new {
                     userId = user.Id,
                     token = code
                 });
 
-                // email
+                // Send email
                 await _emailSender.SendEmailAsync(model.Email, "Confirm your email", $"Click <a href='https://localhost:5001{url}'>here</a> to confirm your email.");
+
+                // Send a message and redirect the user to the login page
                 TempData.Put("message", new AlertMessage() {
                     Title = "Confirm Email.",
                     Message = "A confirmation link has been sent to your email. Please go to your email and confirm your email.",
@@ -111,9 +133,12 @@ namespace shopapp.webui.Controllers
 
                 return RedirectToAction("Login", "Account");
             }
-            PasswordError();
+            else if(result.Errors.Count() > 0) {
+                PasswordError();
+            }
             return View(model);
         }
+
         public async Task<IActionResult> Logout() {
             await _signInManager.SignOutAsync();
             TempData.Put("message", new AlertMessage() {
@@ -140,17 +165,15 @@ namespace shopapp.webui.Controllers
                 ViewBag.Status = "Email not found.";
                 return View();
             }
+            
+            // Generate token
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            // generate token
             var url = Url.Action("ResetPassword", "Account", new {
                 userId = user.Id,
                 token = code
             });
-            System.Console.WriteLine(url);
-
-            // email
-            // await _emailSender.SendEmailAsync(Email, "Reset Password", $"Click <a href='https://localhost:5001{url}'>here</a> to reset your password.");
+            // Send email
+            await _emailSender.SendEmailAsync(Email, "Reset Password", $"Click <a href='https://localhost:5001{url}'>here</a> to reset your password.");
             
             TempData.Put("message", new AlertMessage() {
                 Title = "Reset Password.",
@@ -173,11 +196,15 @@ namespace shopapp.webui.Controllers
             if (!ModelState.IsValid) {
                 return View(model);
             }
+
             var user = await _userManager.FindByIdAsync(model.UserId);
             if(user == null) {
                 return RedirectToAction("Index", "Home");
             }
+
             var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            
+            // If the password is reset successfully, send a message and redirect the user to the login page
             if (result.Succeeded) {
                 TempData.Put("message", new AlertMessage() {
                     Title = "Password Reset.",
@@ -185,7 +212,9 @@ namespace shopapp.webui.Controllers
                     AlertType = "success"
                 });
                 return RedirectToAction("Login", "Account");
-            } else if (result.Errors.Count() > 0) {
+            }
+            // If the password is not reset successfully, send an error message
+            else if (result.Errors.Count() > 0) {
                 PasswordError();
             }
             return View(model);
@@ -204,8 +233,10 @@ namespace shopapp.webui.Controllers
             
             if (user != null) {
                 var result = await _userManager.ConfirmEmailAsync(user, token);
+                // If the email is confirmed successfully, send a message and initialize the cart
                 if (result.Succeeded) {
                     _cartService.InitializeCart(user.Id);
+
                     TempData.Put("message", new AlertMessage() {
                         Title = "Email Confirmed.",
                         Message = "Your email has been confirmed.",
@@ -226,8 +257,13 @@ namespace shopapp.webui.Controllers
             return View();
         }
 
+        // Profile page
         public async Task<IActionResult> Profile() {
             var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+            if (user == null) {
+                return NotFound();
+            }
+            // Create the ProfileModel object
             var model = new ProfileModel() {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -246,9 +282,9 @@ namespace shopapp.webui.Controllers
             if (!ModelState.IsValid) {
                 return View();
             }
-            System.Console.WriteLine(User.Identity.Name);
             var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
             if (user != null) {
+                // Update the user's information
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
                 user.UserName = model.UserName;
@@ -257,6 +293,7 @@ namespace shopapp.webui.Controllers
                 user.Country = model.Country;
                 var result = await _userManager.UpdateAsync(user);
 
+                // If the user's information is updated successfully, send a message and redirect the user to the profile page
                 if (result.Succeeded) {
                     TempData.Put("message", new AlertMessage() {
                         Title = "Profile Updated.",
@@ -264,7 +301,8 @@ namespace shopapp.webui.Controllers
                         AlertType = "success"
                     });
                     return RedirectToAction("Profile");
-                } else {
+                }
+                else {
                     TempData.Put("message", new AlertMessage() {
                         Title = "Profile Error.",
                         Message = "Your profile could not be updated.",
@@ -284,46 +322,56 @@ namespace shopapp.webui.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePassword(PasswordModel model) {
             ViewBag.SelectedPage = "ChangePassword";
-            if (ModelState.IsValid) {
-                var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
-                if (user != null) {
-                    var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
-                    if (!await _userManager.CheckPasswordAsync(user, model.CurrentPassword)) {
-                        TempData.Put("message", new AlertMessage() {
-                            Title = "Password Error.",
-                            Message = "Your current password is incorrect.",
-                            AlertType = "danger"
-                        });
-                        return View();
-                    }
-                    if (await _userManager.CheckPasswordAsync(user, model.NewPassword)) {
-                        TempData.Put("message", new AlertMessage() {
-                            Title = "Password Error.",
-                            Message = "New password cannot be the same as the current password.",
-                            AlertType = "danger"
-                        });
-                        return View();
-                    }
-                    
-                    if (result.Succeeded) {
-                        await _signInManager.SignOutAsync();
-                        TempData.Put("message", new AlertMessage() {
-                            Title = "Password Changed.",
-                            Message = "Your password has been changed successfully. Please login with your new password.",
-                            AlertType = "success"
-                        });
-                        return RedirectToAction("Login");
-                    }
-                    
-                    else if (result.Errors.Count() > 0) {
-                        PasswordError();
-                    }
-                    return View(model);
+            if (!ModelState.IsValid) {
+                return View();
+            }
+
+            // Find the user
+            var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+
+            // If the user is found, change the password
+            if (user != null) {
+                // If the current password is incorrect, send an error message
+                if (!await _userManager.CheckPasswordAsync(user, model.CurrentPassword)) {
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Password Error.",
+                        Message = "Your current password is incorrect.",
+                        AlertType = "danger"
+                    });
+                    return View();
+                }
+
+                // If the new password is the same as the current password, send an error message
+                if (await _userManager.CheckPasswordAsync(user, model.NewPassword)) {
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Password Error.",
+                        Message = "New password cannot be the same as the current password.",
+                        AlertType = "danger"
+                    });
+                    return View();
+                }
+                
+                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                // If the password is changed successfully, send a message and redirect the user to the login page
+                if (result.Succeeded) {
+                    await _signInManager.SignOutAsync();
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Password Changed.",
+                        Message = "Your password has been changed successfully. Please login with your new password.",
+                        AlertType = "success"
+                    });
+                    return RedirectToAction("Login");
+                }
+                
+                // If the password is not changed successfully, send an error message
+                if (result.Errors.Count() > 0) {
+                    PasswordError();
                 }
             }
-            return View();
+            return View(model);
         }
     
+        // Password error message in case the password does not meet the requirements in html format
         public void PasswordError() {
             var PasswordError = @"
                 <p>Password must be at least 6 characters long and must contain at least</p>

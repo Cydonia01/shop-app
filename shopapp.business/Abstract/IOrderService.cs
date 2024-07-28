@@ -1,3 +1,7 @@
+/*
+* This interface is used to define the methods that are used in the OrderService class.
+*/
+
 using System.Collections.Generic;
 using shopapp.entity;
 

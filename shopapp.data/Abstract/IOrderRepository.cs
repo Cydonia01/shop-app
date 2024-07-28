@@ -1,3 +1,6 @@
+/*
+* IOrderRepository.cs is used to define the interface for OrderRepository
+*/
 using System.Collections.Generic;
 using shopapp.entity;
 

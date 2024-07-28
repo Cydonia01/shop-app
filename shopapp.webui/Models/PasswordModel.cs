@@ -1,3 +1,5 @@
+// Purpose: Model for password change.
+
 using System.ComponentModel.DataAnnotations;
 
 namespace shopapp.webui.Models

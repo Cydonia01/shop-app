@@ -1,3 +1,8 @@
+/*
+*   This class is used to define the Order entity.
+*   It contains the properties of the Order entity.
+*   It also contains the EnumPaymentType and EnumOrderState enums.
+*/
 using System;
 using System.Collections.Generic;
 
@@ -19,9 +24,9 @@ namespace shopapp.entity
         public string PaymentId { get; set; }
         public string ConversationId { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.Now;
-        public BillingAddress BillingAddress { get; set; }
-        public ShippingAddress ShippingAddress { get; set; }
-        public Card Card { get; set; }
+        public BillingAddress BillingAddress { get; set; } // Navigation property
+        public ShippingAddress ShippingAddress { get; set; } // Navigation property
+        public Card Card { get; set; } // Navigation property
         public EnumOrderState OrderState { get; set; }
         public EnumPaymentType PaymentType { get; set; }
         public List<OrderItem> OrderItems { get; set; }

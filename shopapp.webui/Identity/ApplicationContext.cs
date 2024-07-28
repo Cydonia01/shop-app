@@ -1,4 +1,4 @@
-
+// Purpose: Contains the ApplicationContext class which is used to connect to the database and store user information.
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

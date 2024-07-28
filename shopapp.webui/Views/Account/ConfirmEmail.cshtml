@@ -1,0 +1,22 @@
+@{
+    int delaySeconds = 5;
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        var countdownElement = document.getElementById("countdown");
+        var countdownValue = parseInt(countdownElement.innerText);
+        var interval = setInterval(function() {
+            countdownValue--;
+            countdownElement.innerText = countdownValue;
+            if (countdownValue <= 0) {
+                clearInterval(interval);
+                window.location.href = '@Url.Action("Login", "Account")';
+            }
+        }, 1000); // 1000 milliseconds = 1 second
+    </script>
+}
+<div class="text-center">
+    <h5 class="mt-2 mb-3">You will be redirected to login page in <span id="countdown">@delaySeconds</span> seconds...</h5>
+    <p>Click <a href="/account/login"><u>here</u></a> to login.</p>
+</div>

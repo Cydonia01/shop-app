@@ -1,3 +1,5 @@
+// Purpose: Contains the SmtpEmailSender class which is used to send emails using the SMTP protocol.
+
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -6,30 +8,32 @@ namespace shopapp.webui.EmailServices
 {
     public class SmtpEmailSender : IEmailSender
     {
-        private string _host { get; set; }
-        private int _port { get; set; }
-        private bool _enableSSL { get; set; }
-        private string _username { get; set; }
-        private string _password { get; set; }
+        private string Host { get; set; }
+        private int Port { get; set; }
+        private bool EnableSSL { get; set; }
+        private string Username { get; set; }
+        private string Password { get; set; }
 
         public SmtpEmailSender(string host, int port, bool enableSSL, string username, string password)
         {
-            _host = host;
-            _port = port;
-            _enableSSL = enableSSL;
-            _username = username;
-            _password = password;
+            Host = host;
+            Port = port;
+            EnableSSL = enableSSL;
+            Username = username;
+            Password = password;
         }
 
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            var client = new SmtpClient(_host, _port)
+            // Create a new SmtpClient object
+            var client = new SmtpClient(Host, Port)
             {
-                Credentials = new NetworkCredential(_username, _password),
-                EnableSsl = _enableSSL
+                Credentials = new NetworkCredential(Username, Password),
+                EnableSsl = EnableSSL
             };
+            // Send the email
             return client.SendMailAsync(
-                new MailMessage(_username, email, subject, htmlMessage) { IsBodyHtml = true }
+                new MailMessage(Username, email, subject, htmlMessage) { IsBodyHtml = true }
             );
         }
     }

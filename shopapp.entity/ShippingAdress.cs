@@ -1,3 +1,6 @@
+/*
+* This class is used to store the shipping address of the user.
+*/
 namespace shopapp.entity
 {
     public class ShippingAddress

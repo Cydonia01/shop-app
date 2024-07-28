@@ -1,3 +1,7 @@
+/*
+* Card.cs is a class that contains the properties of a card.
+* It is used to define the Card class.
+*/
 namespace shopapp.entity
 {
     public class Card

@@ -1,3 +1,5 @@
+// Purpose: Contains the OrderListModel and OrderItemModel classes which are used to display the order details in the order list page.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

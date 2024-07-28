@@ -1,3 +1,5 @@
+// Purpose: View component for categories to display in the view.
+
 using Microsoft.AspNetCore.Mvc;
 using shopapp.business.Abstract;
 

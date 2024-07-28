@@ -1,3 +1,8 @@
+/*
+* This class is used to manage the cart operations.
+* It is used to add, delete, and display the cart items.
+* It is also used to checkout the cart items and get the orders of the user.
+*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +20,16 @@ using shopapp.webui.Models;
 
 namespace shopapp.webui.Controllers
 {
+    // This attribute is used to allow only authorized users to access the methods of this class.
     [Authorize]
     public class CartController: Controller
     {
-        private ICartService _cartService;
-        private UserManager<User> _userManager;
-        private IOrderService _orderService;
+        // Declare the ICartService, UserManager, and IOrderService interfaces.
+        private readonly ICartService _cartService;
+        private readonly UserManager<User> _userManager;
+        private readonly IOrderService _orderService;
+
+        // Constructor method is used to inject the ICartService, UserManager, and IOrderService interfaces.
         public CartController(ICartService cartService, UserManager<User> userManager, IOrderService orderService)
         {
             _cartService = cartService;
@@ -32,6 +41,7 @@ namespace shopapp.webui.Controllers
         {
             var cart = _cartService.GetCartByUserId(_userManager.GetUserId(User));
 
+            // Create a CartModel object and assign the cart items to it.
             return View(new CartModel() {
                 CartId = cart.Id,
                 CartItems = cart.CartItems.Select(i => new CartItemModel() {
@@ -53,11 +63,6 @@ namespace shopapp.webui.Controllers
 
             return RedirectToAction("Index");
         }
-        public IActionResult List()
-        {
-
-            return View();
-        }
 
         [HttpPost]
         public IActionResult DeleteFromCart(int productId)
@@ -71,6 +76,7 @@ namespace shopapp.webui.Controllers
         public IActionResult Checkout() {
             var cart = _cartService.GetCartByUserId(_userManager.GetUserId(User));
 
+            // Create an OrderModel object and assign the cart items to it.
             var orderModel = new OrderModel
             {
                 CartModel = new CartModel()
@@ -90,14 +96,17 @@ namespace shopapp.webui.Controllers
             return View(orderModel);
         }
 
+        // This method is used to checkout the cart items.
         [HttpPost]
         public IActionResult Checkout(OrderModel model)
         {
             if(ModelState.IsValid) {
+                // Get the user id.
                 var userId = _userManager.GetUserId(User);
-                
+                // Get the cart items of the user.
                 var cart = _cartService.GetCartByUserId(userId);
 
+                // Create a CartModel object and assign the cart items to it.
                 model.CartModel = new CartModel() {
                     CartId = cart.Id,
                     CartItems = cart.CartItems.Select(i => new CartItemModel()
@@ -111,9 +120,11 @@ namespace shopapp.webui.Controllers
                     }).ToList()
                 };
                 
+                // Create a Payment object and assign the payment process to it.
                 var user = _userManager.FindByIdAsync(userId).Result;
                 var payment = PaymentProcess(model, user);
 
+                // If the payment is successful, save the order and clear the cart.
                 if(payment.Status == "success")
                 {
                     SaveOrder(model, payment, userId);
@@ -138,6 +149,7 @@ namespace shopapp.webui.Controllers
             OrderListModel orderModel;
 
             foreach (var order in orders) {
+                // Create an OrderListModel object and assign the order items to it.
                 orderModel = new OrderListModel
                 {
                     OrderId = order.OrderId,
@@ -152,6 +164,7 @@ namespace shopapp.webui.Controllers
                     PaymentType = order.PaymentType,
                     OrderState = order.OrderState,
 
+                    // Create an OrderItemModel object and assign the order items to it.
                     OrderItems = order.OrderItems.Select(i => new OrderItemModel()
                     {
                         OrderItemId = i.Id,
@@ -173,8 +186,10 @@ namespace shopapp.webui.Controllers
             _cartService.ClearCart(cartId);
         }
 
+        // Save order to the database.
         private void SaveOrder(OrderModel model, Payment payment, string userId)
         {
+            // Create an Order object and assign the order items to it.
             var order = new Order
             {
                 OrderNumber = new Random().Next(100000, 999999).ToString(),
@@ -204,7 +219,7 @@ namespace shopapp.webui.Controllers
                     Address = model.BillModel.Address,
                     ZipCode = model.BillModel.ZipCode
                 },
-                Card = new shopapp.entity.Card
+                Card = new entity.Card
                 {
                     CardName = model.CardModel.CardName,
                     CardNumber = model.CardModel.CardNumber,
@@ -261,6 +276,7 @@ namespace shopapp.webui.Controllers
             };
             request.PaymentCard = paymentCard;
 
+            // Demo payment card
             // paymentCard.CardNumber = "5528790000000008";
             // paymentCard.ExpireMonth = "12";
             // paymentCard.ExpireYear = "2030";
@@ -312,7 +328,7 @@ namespace shopapp.webui.Controllers
                 {
                     Id = item.ProductId.ToString(),
                     Name = item.Name,
-                    Category1 = "Phone",
+                    Category1 = "Any Category",
                     ItemType = BasketItemType.PHYSICAL.ToString(),
                     Price = (item.Price * item.Quantity).ToString()
                 };

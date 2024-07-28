@@ -1,3 +1,5 @@
+// Purpose: Model for user details.
+
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

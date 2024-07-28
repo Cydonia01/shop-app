@@ -1,3 +1,6 @@
+/*
+* This class is used to create a category object.
+*/
 using System.Collections.Generic;
 
 namespace shopapp.entity

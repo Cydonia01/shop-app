@@ -1,3 +1,5 @@
+// Purpose: Contains the CartModel and CartItemModel classes which are used to represent the cart and cart items in the web application.
+
 using System.Collections.Generic;
 using System.Linq;
 

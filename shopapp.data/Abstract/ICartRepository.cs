@@ -1,3 +1,6 @@
+/*
+* ICartRepository.cs is used to define the interface for CartRepository class.
+*/
 using shopapp.entity;
 
 namespace shopapp.data.Abstract

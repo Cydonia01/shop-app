@@ -1,3 +1,5 @@
+// Purpose: Model for Product. It is used to get and set the properties of a product.
+
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using shopapp.entity;

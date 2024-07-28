@@ -1,3 +1,5 @@
+// Purpose: Contains the extension method to migrate the database on startup.
+
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +11,7 @@ namespace shopapp.webui.Extensions
 {
     public static class MigrationManager
     {
+        // Extend the IHost interface to include a method to migrate the database
         public static IHost MigrateDatabase(this IHost host) {
             using (var scope = host.Services.CreateScope()) {
                 using (var applicationContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>()) {

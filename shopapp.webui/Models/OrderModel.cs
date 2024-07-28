@@ -1,3 +1,5 @@
+// Purpose: Contains the OrderModel class which is used to represent the order information in the web application. Also contains the ShipModel, BillModel, and CardModel classes which are used to represent the shipping, billing, and card information in the order.
+
 namespace shopapp.webui.Models
 {
     public class OrderModel

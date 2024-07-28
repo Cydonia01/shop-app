@@ -1,3 +1,7 @@
+/*
+* ProductManager class is the implementation of IProductService interface.
+* It includes the methods that are used in the ProductManager class.
+*/
 using System.Collections.Generic;
 using shopapp.entity;
 using shopapp.business.Abstract;

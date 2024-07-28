@@ -1,3 +1,7 @@
+/*
+* This class implements the ICategoryService interface.
+*/
+
 using shopapp.business.Abstract;
 using shopapp.entity;
 using System.Collections.Generic;

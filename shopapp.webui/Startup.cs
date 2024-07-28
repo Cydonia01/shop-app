@@ -30,6 +30,7 @@ namespace shopapp.webui
         }
         public void ConfigureServices(IServiceCollection services)
         {
+            // Use tihs code for Sqlite
             // services.AddDbContext<ApplicationContext>(options => options.UseSqlite(_configuration.GetConnectionString("SqliteConnection")));
             // services.AddDbContext<ShopContext>(options => options.UseSqlite(_configuration.GetConnectionString("SqliteConnection")));
             

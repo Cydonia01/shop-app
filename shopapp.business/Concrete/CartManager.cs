@@ -1,3 +1,6 @@
+/*
+* This class is the implementation of the ICartService interface.
+*/
 using shopapp.business.Abstract;
 using shopapp.data.Abstract;
 using shopapp.entity;

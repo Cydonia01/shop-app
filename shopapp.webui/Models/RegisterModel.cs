@@ -1,3 +1,5 @@
+// Purpose: Model for the registration page.
+
 using System.ComponentModel.DataAnnotations;
 
 namespace shopapp.webui.Models

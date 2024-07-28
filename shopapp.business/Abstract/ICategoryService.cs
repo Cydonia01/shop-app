@@ -1,3 +1,7 @@
+/*
+* Category service interface for Category Operations
+*/
+
 using System.Collections.Generic;
 using shopapp.entity;
 
