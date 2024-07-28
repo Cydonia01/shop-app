@@ -14,10 +14,10 @@ namespace shopapp.data.Migrations
                 {
                     BillingAddressId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Address = table.Column<string>(nullable: true),
-                    City = table.Column<string>(nullable: true),
-                    Country = table.Column<string>(nullable: true),
-                    ZipCode = table.Column<string>(nullable: true)
+                    Address = table.Column<string>(nullable: false),
+                    City = table.Column<string>(nullable: false),
+                    Country = table.Column<string>(nullable: false),
+                    ZipCode = table.Column<string>(maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,11 +30,11 @@ namespace shopapp.data.Migrations
                 {
                     CardId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CardName = table.Column<string>(nullable: true),
-                    CardNumber = table.Column<string>(nullable: true),
-                    ExpirationMonth = table.Column<string>(nullable: true),
-                    ExpirationYear = table.Column<string>(nullable: true),
-                    Cvc = table.Column<string>(nullable: true)
+                    CardName = table.Column<string>(nullable: false),
+                    CardNumber = table.Column<string>(maxLength: 16, nullable: false),
+                    ExpirationMonth = table.Column<string>(maxLength: 2, nullable: false),
+                    ExpirationYear = table.Column<string>(maxLength: 4, nullable: false),
+                    Cvc = table.Column<string>(maxLength: 3, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,7 +61,7 @@ namespace shopapp.data.Migrations
                     CategoryId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Url = table.Column<string>(nullable: true)
+                    Url = table.Column<string>(maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -74,9 +74,9 @@ namespace shopapp.data.Migrations
                 {
                     ProductId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Url = table.Column<string>(nullable: true),
-                    Price = table.Column<double>(nullable: true),
+                    Name = table.Column<string>(maxLength: 60, nullable: false),
+                    Url = table.Column<string>(maxLength: 100, nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Description = table.Column<string>(nullable: true),
                     ImageUrl = table.Column<string>(nullable: true),
                     IsApproved = table.Column<bool>(nullable: false),
@@ -94,10 +94,10 @@ namespace shopapp.data.Migrations
                 {
                     ShippingAddressId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Address = table.Column<string>(nullable: true),
-                    City = table.Column<string>(nullable: true),
-                    Country = table.Column<string>(nullable: true),
-                    ZipCode = table.Column<string>(nullable: true)
+                    Address = table.Column<string>(nullable: false),
+                    City = table.Column<string>(nullable: false),
+                    Country = table.Column<string>(nullable: false),
+                    ZipCode = table.Column<string>(maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -161,18 +161,18 @@ namespace shopapp.data.Migrations
                 {
                     OrderId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    OrderNumber = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: true),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    Phone = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    Note = table.Column<string>(nullable: true),
+                    OrderNumber = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(nullable: false),
+                    LastName = table.Column<string>(nullable: false),
+                    Phone = table.Column<string>(maxLength: 15, nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    Note = table.Column<string>(maxLength: 200, nullable: true),
                     BillingAddressId = table.Column<int>(nullable: false),
                     ShippingAddressId = table.Column<int>(nullable: false),
                     CardId = table.Column<int>(nullable: false),
-                    PaymentId = table.Column<string>(nullable: true),
-                    ConversationId = table.Column<string>(nullable: true),
+                    PaymentId = table.Column<string>(nullable: false),
+                    ConversationId = table.Column<string>(nullable: false),
                     OrderDate = table.Column<DateTime>(nullable: false),
                     OrderState = table.Column<int>(nullable: false),
                     PaymentType = table.Column<int>(nullable: false)
@@ -244,11 +244,11 @@ namespace shopapp.data.Migrations
                 columns: new[] { "ProductId", "Description", "ImageUrl", "IsApproved", "IsHome", "Name", "Price", "Url" },
                 values: new object[,]
                 {
-                    { 1, "Nice Phone", "1.jpg", true, false, "Samsung S5", 2000.0, "samsung-s5" },
-                    { 2, "Nice Phone", "2.jpg", true, false, "Samsung S6", 3000.0, "samsung-s6" },
-                    { 3, "Nice Phone", "3.jpg", false, false, "Samsung S7", 4000.0, "samsung-s7" },
-                    { 4, "Nice Phone", "4.jpg", true, false, "Samsung S8", 5000.0, "samsung-s8" },
-                    { 5, "Nice Phone", "5.jpg", true, false, "Samsung S9", 6000.0, "samsung-s9" }
+                    { 1, "Nice Phone", "1.jpg", true, false, "Samsung S5", 2000m, "samsung-s5" },
+                    { 2, "Nice Phone", "2.jpg", true, false, "Samsung S6", 3000m, "samsung-s6" },
+                    { 3, "Nice Phone", "3.jpg", false, false, "Samsung S7", 4000m, "samsung-s7" },
+                    { 4, "Nice Phone", "4.jpg", true, false, "Samsung S8", 5000m, "samsung-s8" },
+                    { 5, "Nice Phone", "5.jpg", true, false, "Samsung S9", 6000m, "samsung-s9" }
                 });
 
             migrationBuilder.InsertData(

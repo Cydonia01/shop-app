@@ -9,6 +9,8 @@ namespace shopapp.data.Configurations
         public void Configure(EntityTypeBuilder<ProductCategory> builder)
         {
             builder.HasKey(c => new {c.CategoryId, c.ProductId});
+            builder.HasOne(c => c.Product).WithMany(c => c.ProductCategories).HasForeignKey(c => c.ProductId);
+            builder.HasOne(c => c.Category).WithMany(c => c.ProductCategories).HasForeignKey(c => c.CategoryId);
         }
     }
 }

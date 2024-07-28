@@ -9,7 +9,7 @@ using shopapp.webui.Identity;
 namespace shopapp.webui.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240722194325_InitialCreate")]
+    [Migration("20240728221149_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

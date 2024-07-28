@@ -9,92 +9,146 @@
             <input type="hidden" name="cartId" value="0">
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label asp-for="@Model.FirstName">First Name</label>
-                    <input asp-for="@Model.FirstName" class="form-control">
+                    <label asp-for="FirstName"></label>
+                    <div>
+                        <input asp-for="FirstName" class="form-control">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="@Model.LastName">Last Name</label>
-                    <input asp-for="@Model.LastName" class="form-control">
+                    <label asp-for="LastName"></label>
+                    <div>
+                        <input asp-for="LastName" class="form-control">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label asp-for="@Model.Email"></label>
-                    <input asp-for="@Model.Email" class="form-control">
+                    <label asp-for="Email"></label>
+                    <div>
+                        <input asp-for="Email" class="form-control">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="@Model.Phone"></label>
-                    <input asp-for="@Model.Phone" class="form-control">
+                    <label asp-for="Phone"></label>
+                    <div>
+                        <input asp-for="Phone" class="form-control">
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
             <div class="mb-3">
-                <label asp-for="@Model.Note"></label>
-                <textarea asp-for="@Model.Note" class="form-control">Order Note</textarea>
+                <label asp-for="Note"></label>
+                <div>
+                    <textarea asp-for="Note" class="form-control"></textarea>
+                    <span asp-validation-for="Note" class="text-danger"></span>
+                </div>
             </div>
             <h4 class="mb-3">Shipping Address</h4>
             <hr class="mb-3">
             <div class="mb-3">
                 <label asp-for="@Model.ShipModel.Address"></label>
-                <textarea asp-for="@Model.ShipModel.Address" class="form-control"></textarea>
+                <div>
+                    <textarea asp-for="@Model.ShipModel.Address" class="form-control"></textarea>
+                    <span asp-validation-for="@Model.ShipModel.Address" class="text-danger"></span>
+                </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-4">
                     <label asp-for="@Model.ShipModel.City"></label>
-                    <input asp-for="@Model.ShipModel.City" class="form-control">
+                    <div>
+                        <input asp-for="@Model.ShipModel.City" class="form-control">
+                        <span asp-validation-for="@Model.ShipModel.City" class="text-danger"></span>
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <label asp-for="@Model.ShipModel.Country"></label>
-                    <input asp-for="@Model.ShipModel.Country" class="form-control">
+                    <div>
+                        <input asp-for="@Model.ShipModel.Country" class="form-control">
+                        <span asp-validation-for="@Model.ShipModel.Country" class="text-danger"></span>
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <label asp-for="@Model.ShipModel.ZipCode">Zip Code</label>
-                    <input asp-for="@Model.ShipModel.ZipCode" class="form-control">
+                    <label asp-for="@Model.ShipModel.ZipCode"></label>
+                    <div>
+                        <input asp-for="@Model.ShipModel.ZipCode" class="form-control">
+                        <span asp-validation-for="@Model.ShipModel.ZipCode" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
             <h4 class="mb-3">Billing Address</h4>
             <hr class="mb-3">
             <div class="mb-3">
                 <label asp-for="@Model.BillModel.Address"></label>
-                <textarea asp-for="@Model.BillModel.Address" class="form-control"></textarea>
+                <div>
+                    <textarea asp-for="@Model.BillModel.Address" class="form-control"></textarea>
+                    <span asp-validation-for="@Model.BillModel.Address" class="text-danger"></span>
+                </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-4">
                     <label asp-for="@Model.BillModel.City"></label>
-                    <input asp-for="@Model.BillModel.City" class="form-control">
+                    <div>
+                        <input asp-for="@Model.BillModel.City" class="form-control">
+                        <span asp-validation-for="@Model.BillModel.City" class="text-danger"></span>
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <label asp-for="@Model.BillModel.Country"></label>
-                    <input asp-for="@Model.BillModel.Country" class="form-control">
+                    <div>
+                        <input asp-for="@Model.BillModel.Country" class="form-control">
+                        <span asp-validation-for="@Model.BillModel.Country" class="text-danger"></span>
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <label asp-for="@Model.BillModel.ZipCode">Zip Code</label>
-                    <input asp-for="@Model.BillModel.ZipCode" class="form-control">
+                    <label asp-for="@Model.BillModel.ZipCode"></label>
+                    <div>
+                        <input asp-for="@Model.BillModel.ZipCode" class="form-control">
+                        <span asp-validation-for="@Model.BillModel.ZipCode" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
             <h4 class="mb-3">Payment Details</h4>
             <hr class="mb-3">
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label asp-for="@Model.CardModel.CardName">Card Name</label>
-                    <input asp-for="@Model.CardModel.CardName" class="form-control">
+                    <label asp-for="@Model.CardModel.CardName"></label>
+                    <div>
+                        <input asp-for="@Model.CardModel.CardName" class="form-control">
+                        <span asp-validation-for="@Model.CardModel.CardName" class="text-danger"></span>
+                    </div>
                 </div>
                 <div class="col-md-6">
-                    <label asp-for="@Model.CardModel.CardNumber">Card Number</label>
-                    <input asp-for="@Model.CardModel.CardNumber" class="form-control">
+                    <label asp-for="@Model.CardModel.CardNumber"></label>
+                    <div>
+                        <input asp-for="@Model.CardModel.CardNumber" class="form-control">
+                        <span asp-validation-for="@Model.CardModel.CardNumber" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <label asp-for="@Model.CardModel.ExpirationMonth">Expiration Month</label>
-                    <input asp-for="@Model.CardModel.ExpirationMonth" class="form-control">
+                    <label asp-for="@Model.CardModel.ExpirationMonth"></label>
+                    <div>
+                        <input asp-for="@Model.CardModel.ExpirationMonth" class="form-control">
+                        <span asp-validation-for="@Model.CardModel.ExpirationMonth" class="text-danger"></span>
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <label asp-for="@Model.CardModel.ExpirationYear">Expiration Year</label>
-                    <input asp-for="@Model.CardModel.ExpirationYear" class="form-control">
+                    <label asp-for="@Model.CardModel.ExpirationYear"></label>
+                    <div>
+                        <input asp-for="@Model.CardModel.ExpirationYear" class="form-control">
+                        <span asp-validation-for="@Model.CardModel.ExpirationYear" class="text-danger"></span>
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <label asp-for="@Model.CardModel.Cvc">CVC</label>
-                    <input asp-for="@Model.CardModel.Cvc" class="form-control">
+                    <label asp-for="@Model.CardModel.Cvc"></label>
+                    <div>
+                        <input asp-for="@Model.CardModel.Cvc" class="form-control">
+                        <span asp-validation-for="@Model.CardModel.Cvc" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
@@ -124,3 +178,8 @@
         </ul>
     </div>
 </div>
+
+@section Scripts {
+    <script src="/modules/jquery-validation/dist/jquery.validate.min.js"/></script>
+    <script src="/modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"/></script>
+}

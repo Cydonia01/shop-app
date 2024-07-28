@@ -24,16 +24,21 @@ namespace shopapp.data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Country")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("ZipCode")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4")
+                        .HasMaxLength(10);
 
                     b.HasKey("BillingAddressId");
 
@@ -47,19 +52,28 @@ namespace shopapp.data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CardName")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("CardNumber")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasColumnType("varchar(16) CHARACTER SET utf8mb4")
+                        .HasMaxLength(16);
 
                     b.Property<string>("Cvc")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasColumnType("varchar(3) CHARACTER SET utf8mb4")
+                        .HasMaxLength(3);
 
                     b.Property<string>("ExpirationMonth")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasColumnType("varchar(2) CHARACTER SET utf8mb4")
+                        .HasMaxLength(2);
 
                     b.Property<string>("ExpirationYear")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasColumnType("varchar(4) CHARACTER SET utf8mb4")
+                        .HasMaxLength(4);
 
                     b.HasKey("CardId");
 
@@ -116,7 +130,9 @@ namespace shopapp.data.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("Url")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
 
                     b.HasKey("CategoryId");
 
@@ -162,42 +178,52 @@ namespace shopapp.data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ConversationId")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Note")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200);
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("OrderNumber")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("OrderState")
                         .HasColumnType("int");
 
                     b.Property<string>("PaymentId")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("PaymentType")
                         .HasColumnType("int");
 
                     b.Property<string>("Phone")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
+                        .HasMaxLength(15);
 
                     b.Property<int>("ShippingAddressId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("OrderId");
@@ -263,14 +289,16 @@ namespace shopapp.data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasColumnType("varchar(60) CHARACTER SET utf8mb4")
+                        .HasMaxLength(60);
 
-                    b.Property<double?>("Price")
-                        .HasColumnType("double");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Url")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
 
                     b.HasKey("ProductId");
 
@@ -286,7 +314,7 @@ namespace shopapp.data.Migrations
                             IsApproved = true,
                             IsHome = false,
                             Name = "Samsung S5",
-                            Price = 2000.0,
+                            Price = 2000m,
                             Url = "samsung-s5"
                         },
                         new
@@ -298,7 +326,7 @@ namespace shopapp.data.Migrations
                             IsApproved = true,
                             IsHome = false,
                             Name = "Samsung S6",
-                            Price = 3000.0,
+                            Price = 3000m,
                             Url = "samsung-s6"
                         },
                         new
@@ -310,7 +338,7 @@ namespace shopapp.data.Migrations
                             IsApproved = false,
                             IsHome = false,
                             Name = "Samsung S7",
-                            Price = 4000.0,
+                            Price = 4000m,
                             Url = "samsung-s7"
                         },
                         new
@@ -322,7 +350,7 @@ namespace shopapp.data.Migrations
                             IsApproved = true,
                             IsHome = false,
                             Name = "Samsung S8",
-                            Price = 5000.0,
+                            Price = 5000m,
                             Url = "samsung-s8"
                         },
                         new
@@ -334,7 +362,7 @@ namespace shopapp.data.Migrations
                             IsApproved = true,
                             IsHome = false,
                             Name = "Samsung S9",
-                            Price = 6000.0,
+                            Price = 6000m,
                             Url = "samsung-s9"
                         });
                 });
@@ -403,16 +431,21 @@ namespace shopapp.data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Country")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("ZipCode")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4")
+                        .HasMaxLength(10);
 
                     b.HasKey("ShippingAddressId");
 

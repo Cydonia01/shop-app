@@ -36,6 +36,10 @@ namespace shopapp.data.Concrete.EfCore
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ProductCategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderConfiguration());
+            modelBuilder.ApplyConfiguration(new CardConfiguration());
+            modelBuilder.ApplyConfiguration(new BillingAddressConfiguration());
+            modelBuilder.ApplyConfiguration(new ShippingAddressConfiguration());
 
             modelBuilder.Seed();
         }
