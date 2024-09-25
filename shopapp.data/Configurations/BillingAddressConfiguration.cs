@@ -1,3 +1,6 @@
+/*
+This class is used to configure the properties of the BillingAddress class.
+*/
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using shopapp.entity;

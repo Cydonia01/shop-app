@@ -129,6 +129,12 @@ namespace shopapp.webui.Controllers
                 {
                     SaveOrder(model, payment, userId);
                     ClearCart(model.CartModel.CartId);
+                    // If the password is reset successfully, send a message and redirect the user to the login page
+                    TempData.Put("message", new AlertMessage() {
+                        Title = "Order Placed.",
+                        Message = "Your order has been placed successfully.",
+                        AlertType = "success"
+                    });
                     return View("Success");
                 } else {
                     TempData.Put("message", new AlertMessage() {
@@ -247,8 +253,8 @@ namespace shopapp.webui.Controllers
         {
             Options options = new Options
             {
-                ApiKey = "<your api key>",
-                SecretKey = "<your secret key>",
+                ApiKey = "<YourApiKey>",
+                SecretKey = "<YourSecretKey>",
                 BaseUrl = "https://sandbox-api.iyzipay.com"
             };
 

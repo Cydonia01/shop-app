@@ -10,7 +10,7 @@ namespace shopapp.webui.Models
     public class RoleModel
     {
         [Required]
-        [StringLength(100, MinimumLength = 5, ErrorMessage = "Name must be between 3 and 100 characters")]
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 100 characters")]
         public string Name { get; set; }
     }
 

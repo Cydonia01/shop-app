@@ -1,3 +1,4 @@
+// Purpose: Contains the Startup class which is used to configure the application's request pipeline.
 using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +9,6 @@ using shopapp.data.Abstract;
 using shopapp.data.Concrete.EfCore;
 using shopapp.business.Abstract;
 using shopapp.business.Concrete;
-using shopapp.data.Concrete;
 using Microsoft.EntityFrameworkCore;
 using shopapp.webui.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -16,7 +16,6 @@ using System;
 using Microsoft.AspNetCore.Http;
 using shopapp.webui.EmailServices;
 using Microsoft.Extensions.Configuration;
-using shopapp.entity;
 
 namespace shopapp.webui
 {
@@ -37,8 +36,9 @@ namespace shopapp.webui
             services.AddDbContext<ApplicationContext>(options => options.UseMySql(_configuration.GetConnectionString("MySqlConnection")));
             services.AddDbContext<ShopContext>(options => options.UseMySql(_configuration.GetConnectionString("MySqlConnection")));
 
-            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders(); // AddDefaultTokenProviders() is used to generate tokens for password reset and email confirmation
 
+            // Password settings
             services.Configure<IdentityOptions>(options => {
                 // Password
                 options.Password.RequireDigit = true;
@@ -59,6 +59,7 @@ namespace shopapp.webui
                 options.SignIn.RequireConfirmedPhoneNumber = false;
             });
 
+            // Cookie settings
             services.ConfigureApplicationCookie(options => {
                 options.LoginPath = "/account/login";
                 options.LogoutPath = "/account/logout";
@@ -72,6 +73,7 @@ namespace shopapp.webui
                 };
             });
 
+            // This code is used to add the services to the container.
             services.AddScoped<ICategoryService, CategoryManager>();
             services.AddScoped<IProductService, ProductManager>();
             services.AddScoped<ICartService, CartManager>();
@@ -79,6 +81,7 @@ namespace shopapp.webui
             
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            // This code is used to add the SmtpEmailSender service to the container.
             services.AddScoped<IEmailSender, SmtpEmailSender>(
                 service => new SmtpEmailSender(
                     _configuration["EmailSender:Host"],
@@ -89,7 +92,7 @@ namespace shopapp.webui
                 )
             );
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(); // This code is used to add the MVC services to the container.
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,14 +109,15 @@ namespace shopapp.webui
             );
             if (env.IsDevelopment())
             {
-                // SeedDatabase.Seed();
                 app.UseDeveloperExceptionPage();
             }
 
+            // This code is used to configure the request pipeline.
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
 
+            // This code is used to configure the endpoints.
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -212,7 +216,7 @@ namespace shopapp.webui
                     pattern: "{controller=Home}/{action=Index}/{id?}"
                 );
             });
-            SeedIdentity.Seed(userManager, roleManager, configuration, cartService).Wait();
+            SeedIdentity.Seed(userManager, roleManager, configuration, cartService).Wait(); // This code is used to seed the database with some initial data.
         }
     }
 }

@@ -1,3 +1,6 @@
+/*
+    ShippingAddressConfiguration class is created to configure the ShippingAddress entity.
+*/
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using shopapp.entity;

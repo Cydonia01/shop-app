@@ -1,3 +1,6 @@
+/*
+    This class is used to configure the Card entity in the database.
+*/
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using shopapp.entity;

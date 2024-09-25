@@ -1,3 +1,7 @@
+/*
+    This class is used to configure the Order entity in the database.
+    It is used to define the properties of the Order entity and the relationships between other entities.
+*/
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using shopapp.entity;

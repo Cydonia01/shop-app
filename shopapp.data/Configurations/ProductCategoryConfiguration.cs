@@ -1,3 +1,6 @@
+/*
+    This class is used to configure the relationship between the Product and Category entities.
+*/
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using shopapp.entity;

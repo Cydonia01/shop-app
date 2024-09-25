@@ -1,3 +1,6 @@
+/*
+This class is used to configure the Category entity. It is used to define the properties of the Category entity and the relationships between the entities.
+*/
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using shopapp.entity;
