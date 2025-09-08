@@ -53,11 +53,15 @@ dotnet restore
     - Add API keys for the payment gateway
     - Configure the email service
 <br>
+
 4. Run database migrations:
+
 ```bash
 dotnet ef database update
 ```
+
 5. Run the project:
+   
 ```bash
 dotnet run
 ```
